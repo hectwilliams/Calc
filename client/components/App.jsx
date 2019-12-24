@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import axios from 'axios';
 
 class App extends React.Component {
   constructor(props) {
@@ -9,7 +9,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    console.log('mounted page');
+    axios.get('/hello')
+    .then((resp)=>{
+      console.log(resp);
+    })
+    .catch((err)=>{
+      console.log(err);
+    })
   }
 
   render() {
@@ -20,6 +26,6 @@ class App extends React.Component {
     )
   }
 
-}
+};
 
 export default App;

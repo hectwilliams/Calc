@@ -15,6 +15,6 @@ app.listen(port, host, (msg)=> {
   console.log('express server running on http://localhost:' + port );
 });
 
-app.get('/', (req, res)=> {
+app.get('/hello', (req, res)=> {
   res.send('hello world')
 });
