@@ -16,5 +16,5 @@ app.listen(port, host, (msg)=> {
 });
 
 app.get('/hello', (req, res)=> {
-  res.send('hello world')
+  res.status(201);
 });

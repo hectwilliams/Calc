@@ -1,0 +1,90 @@
+
+body {
+  padding: 0;
+  margin: 0;
+ }
+
+ /* Banner section */
+ .banner {
+  display: grid;
+  height: 50px;
+  grid-template-rows: repeat(5, 20%);
+  grid-template-columns: 100px 80% 13% auto;
+  border-bottom: ridge 1px black;
+}
+
+.logo {
+  display: block;
+  grid-row: 1/5;
+  grid-column: 1/2;
+  background-color: azure;
+  text-align: center;
+}
+
+.logo label {
+  font-size: larger;
+}
+
+.weird {
+  display: block;
+  grid-row: 5 / 6;
+  grid-column: 1/2;
+  background-color: blanchedalmond;
+}
+
+.options {
+  display: flex;
+  grid-row: 1 / 6;
+  grid-column: 2;
+  background-color: yellow;
+  justify-content: center;
+}
+
+.options button  {
+  border: groove 1px hotpink;
+  width: 100px;
+  font-weight: bold;
+  outline: none;
+}
+
+.options button::after {
+  display: block;
+  content: "";
+  position: relative;
+  top: 12px;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-left: 3px solid transparent;
+  border-right: 3px solid transparent;
+  border-top: 3px solid black;
+  pointer-events: none;
+}
+
+.options button:active {
+  background-color: rgb(128, 128, 128);
+}
+
+.cacheView {
+  display: block;
+  grid-row: 1/ 6;
+  grid-column: 3;
+  background-color: green;
+}
+
+
+/* Banner section end */
+
+
+#optionSelect  {
+  display: block;
+  text-align: left;
+  border-bottom: groove 1px black ;
+}
+
+#optionSelect label {
+  display: block;
+  font-size: large;
+  font-family: fantasy;
+  height: 50px;
+}
