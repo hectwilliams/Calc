@@ -1,12 +1,14 @@
 import React from 'react';
 import axios from 'axios';
 import AppCss from './App.css';
+import ModeView from './ModeView';
 
 export default class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       optionText: "",
+      opView: null,
       blocks: {
         basic : 19,
         science: 49,
@@ -27,8 +29,8 @@ export default class App extends React.Component {
   }
 
   optionClick (event) {
-    let obj = {optionText: event.currentTarget.innerText}
-    this.setState(obj);
+    this.setState({optionText: ''});
+    this.setState({optionText: event.currentTarget.innerText});
   }
 
 
@@ -36,23 +38,38 @@ export default class App extends React.Component {
     return (
       <div>
 
-{/* LEFT */}
+{/* TOP LEFT BANNER  */}
         <div className = {AppCss.banner}>
           <span className = {AppCss.logo}>
             <label> MATH </label>
           </span>
 
 
-{/* MIDDLE */}
+{/* MIDDLE BANNER  */}
 
           <span className = {AppCss.weird}></span>
 
           <span className = {AppCss.options}>
-            <button onClick = {this.optionClick} > Mode </button>
+
+            <button onClick = {this.optionClick} >
+              <label> Mode </label>
+              {
+                (this.state.optionText) ?
+                  <div className  = {ModeView.selectMode}>
+                    <div>  </div>
+                    <div>  </div>
+                    <div>  </div>
+                  </div>
+                : ''
+              }
+             </button>
+
+
             <button onClick = {this.optionClick} > Conversion</button>
+
           </span>
 
-{/* RIGHT */}
+{/*  TOP RIGHT BANNER  */}
           <span className = {AppCss.cacheView}></span>
         </div>
 
@@ -63,6 +80,8 @@ export default class App extends React.Component {
 
 {/* op Blocks */}
         {/* TODO ... ... .. . */}
+      <ModeView blocksCount = {this.state.blocks.basic} />
+
       </div>
     )
   }
