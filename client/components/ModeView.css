@@ -1,0 +1,85 @@
+.container {
+  display: grid;
+  border: groove 2px red;
+  grid-template-columns: 10% auto 10%;
+  grid-template-rows: 500px;
+  grid-template-areas:
+  "a b c";
+}
+.itemBar_ {
+  grid-area: a, c;
+  border: groove 5px purple;
+  background-color: black;
+}
+
+.itemView_ {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: auto;
+  grid-area: b;
+}
+
+.output {             /* child of .itemView_ */
+  grid-column: 2;
+  width: 100%;
+  margin: auto;
+}
+
+.output :nth-child(1){
+  display: block;
+  border-radius: 10px;
+  border: groove 1px black;
+  width: 80%;
+  height: 40px;
+  text-align: right;
+  font-size: xx-large;
+}
+
+.output :nth-child(2){
+  display: block;
+  border-radius: 10px;
+  border: groove 1px black;
+  width: 30%;
+  height: 40px;
+  text-align: right;
+  font-size: xx-large;
+}
+
+.blocks {             /* child of .itemView_ */
+  grid-column:  1;
+  display: grid;
+  grid-template-columns: repeat(8, 55px [cVar]);
+  grid-template-rows: repeat(8, 55px [rVar]);
+  margin: auto auto;
+}
+
+.blocks button {
+  font-weight: bold;
+  font-size: larger;
+}
+
+
+
+
+
+/*
+.selectMode {
+  display: block;
+  border: groove 2px purple;
+} */
+
+/*
+.itemView_[data-count = "19"] {
+  /* display: block;
+  /* background-color: purple;
+}
+
+.itemView_[data-count = "49"] {
+  display: block;
+  background-color: purple;
+}
+
+.itemView_[data-count = "39"] {
+  display: block;
+  background-color: purple;
+}*/

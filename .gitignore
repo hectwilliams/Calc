@@ -2,5 +2,4 @@
 /.vscode/
 package.json
 package-lock.json
-
-
+public/bundle.js
