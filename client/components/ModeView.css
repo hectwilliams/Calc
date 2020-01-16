@@ -58,8 +58,13 @@
   font-size: larger;
 }
 
-
-
+/* [data-count]:nth-child(30):hover::after {
+    display: block;
+    content: attr(data-count);
+    height: 10%;
+    width:10%;
+    font-size: small;
+} */
 
 
 /*
