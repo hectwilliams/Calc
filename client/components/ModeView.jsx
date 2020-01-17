@@ -226,11 +226,12 @@ const buttonClicked = (event) => {
     if ((constants[op] || op.match(/[0-9]/))  ) {
       temp = (constants[op]) || parseFloat(op);
 
-      if (resultNode.innerHTML.match(/(?<=[\d*\.])\d+$/))
-        return
 
       if (resultNode.innerHTML.match(/^0$/))
         resultNode.innerHTML = temp;
+
+      else if (resultNode.innerHTML.match(/[0-9]$/) && constants[op])
+      resultNode.innerHTML = resultNode.innerHTML;
 
       else if ( resultNode.innerHTML.slice(-1).match(/[0-9*+-÷\()]/g))
         resultNode.innerHTML += temp;
@@ -239,7 +240,7 @@ const buttonClicked = (event) => {
 
     } else if (op === ')') { // CLOSE PARENTHESIS
 
-      if (resultNode.innerHTML.match(/(?<=\(\d*)\d+$|\)$/) && !balanced) {
+      if (resultNode.innerHTML.match(/(?<=\(\d*)\d+|\d+\.\d+|\)$/) && !balanced) {
 
         if (eventNode.previousSibling.dataset.count != 0)
           eventNode.previousSibling.dataset.count = parseInt(eventNode.previousSibling.dataset.count) - 1;
