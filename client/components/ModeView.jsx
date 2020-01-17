@@ -111,6 +111,7 @@ const buttonClicked = (event) => {
   let binaryOps = ['*', '+', '-', '%', '÷','y√x', 'e^x'];
   let UnaryOps = ['√', 'x^3', 'x^2', '1/x', '+/-', 'n!', '|x|', '2√', '3√', '2^x'];
   let booleanArray = [binaryOps.includes(op), UnaryOps.includes(op)];
+  let balanced = isBalanced(resultNode.innerHTML);
   let temp, count;
 
   if (resultNode.innerHTML === 'NaN') {
@@ -169,7 +170,7 @@ const buttonClicked = (event) => {
   }
 
 /* UNARY OPERATIONS */
-  if (booleanArray[1] && !booleanArray[0] ) {
+  if ( booleanArray[1] && !booleanArray[0] && resultNode.innerHTML.match(/^.(?![÷+\-*])/) ) {
 
     if (op === '2^x') {
 
@@ -221,7 +222,7 @@ const buttonClicked = (event) => {
   /* NOT AN OPERATION */
   if (booleanArray.every((x) => x === false)) {
 
-    if (constants[op] || op.match(/[0-9]/)) {
+    if ((constants[op] || op.match(/[0-9]/)) ) {
       temp = (constants[op]) || parseFloat(op);
 
       if (resultNode.innerHTML == 0 && resultNode.innerHTML.length === 1)
@@ -234,7 +235,7 @@ const buttonClicked = (event) => {
 
     } else if (op === ')') { // CLOSE PARENTHESIS
 
-      if (resultNode.innerHTML.match(/.+[0-9\)]$/g)) {
+      if (resultNode.innerHTML.match(/(?<=\(\d*)\d+$|\)$/) && !balanced) {
 
         if (eventNode.previousSibling.dataset.count != 0)
           eventNode.previousSibling.dataset.count = parseInt(eventNode.previousSibling.dataset.count) - 1;
@@ -250,7 +251,7 @@ const buttonClicked = (event) => {
       if (resultNode.innerHTML.match(/^0$/g))
         resultNode.innerHTML = '(';
 
-      if (resultNode.innerHTML.match(/.+[*+-÷]$/g))
+      else if (resultNode.innerHTML.match(/.+[\(*+-÷]$|\($/g))
         resultNode.innerHTML += '(';
 
       if (temp !=resultNode.innerHTML )
