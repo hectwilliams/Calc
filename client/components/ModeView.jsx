@@ -260,7 +260,7 @@ const buttonClicked = (event) => {
 
     } else if (op === '.' ) {   // DECIMAL
 
-      if (resultNode.innerHTML.match(/(?<!\d+\.)\d$/))
+      if (resultNode.innerHTML.match(/(?<!\.[0-9]*)\d$/))
         resultNode.innerHTML += '.';
 
     } else if (op === '=') {  // EQUAL
