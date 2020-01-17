@@ -23,16 +23,21 @@
   grid-column: 2;
   width: 100%;
   margin: auto;
+  text-align: right;
+
 }
 
 .output :nth-child(1){
-  display: block;
+  display: inline-block;
   border-radius: 10px;
   border: groove 1px black;
   width: 80%;
-  height: 40px;
+  /* height: 40px; */
   text-align: right;
-  font-size: xx-large;
+  font-size: medium;
+  vertical-align: bottom;
+  padding-right: 5%;
+
 }
 
 .output :nth-child(2){
@@ -55,8 +60,18 @@
 
 .blocks button {
   font-weight: bold;
-  font-size: larger;
+  font-size: small;
 }
+
+[data-count]:nth-child(30) {
+  opacity: 0.5;
+}
+
+
+[data-count= "0"]:nth-child(30) {
+    opacity: 1;
+}
+
 
 
 
@@ -65,7 +80,6 @@
 /*
 .selectMode {
   display: block;
-  border: groove 2px purple;
 } */
 
 /*
