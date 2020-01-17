@@ -53,7 +53,7 @@ const View = ({blocksCount}) => {
           <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} value = {'x^3'} className = {ViewCss.item}> {'x^3'} </button>
-          <button onClick = {buttonClicked} value = {'1/x'} className = {ViewCss.item}> {'1/x'} </button> 
+          <button onClick = {buttonClicked} value = {'1/x'} className = {ViewCss.item}> {'1/x'} </button>
           <button onClick = {buttonClicked} value = {9} className = {ViewCss.item}> {'9'} </button>
           <button onClick = {buttonClicked} value = {8} className = {ViewCss.item}> {'8'} </button>
           <button onClick = {buttonClicked} value = {7} className = {ViewCss.item}> {'7'} </button>
@@ -106,13 +106,19 @@ const buttonClicked = (event) => {
   let resultNode = parentNode.nextSibling.childNodes[0];
   let op = event.currentTarget.value;
   let currData =  resultNode.innerHTML ;
+  let constants = {'π': Math.PI};
+
   let binaryOps = ['*', '+', '-', '%', '÷','y√x', 'e^x'];
   let UnaryOps = ['√', 'x^3', 'x^2', '1/x', '+/-', 'n!', '|x|', '2√', '3√', '2^x'];
   let booleanArray = [binaryOps.includes(op), UnaryOps.includes(op)];
   let temp, count;
 
+  if (resultNode.innerHTML === 'NaN') {
+    resultNode.innerHTML = 0;
+  }
+
 /* BINARY OPERATIONS */
-  if (booleanArray[0]) { 
+  if (booleanArray[0]) {
 
     if (!(currData !== ')' || Number.isInteger(currData))) {return};
 
@@ -132,11 +138,11 @@ const buttonClicked = (event) => {
       resultNode.innerHTML += '-';
 
     } else if (op === '÷') {
-    
+
       resultNode.innerHTML += '÷';
-   
+
     } else if (op === '%') {
-  
+
       resultNode.innerHTML += '÷';
 
     } else if (op === 'y√x') {
@@ -157,14 +163,14 @@ const buttonClicked = (event) => {
         str += (idx < collection.length - 1 ) ? ele + opArray[idx] : ele;
       });
 
-      resultNode.innerHTML = str; 
+      resultNode.innerHTML = str;
     }
 
   }
 
-/* UNARY OPERATIONS */  
-  if (booleanArray[1] && !booleanArray[0] ) {    
-  
+/* UNARY OPERATIONS */
+  if (booleanArray[1] && !booleanArray[0] ) {
+
     if (op === '2^x') {
 
       resultNode.innerHTML = 2**parseFloat(resultNode.innerHTML);
@@ -172,11 +178,11 @@ const buttonClicked = (event) => {
     } else if (op === '2√') {
 
       resultNode.innerHTML = parseFloat(resultNode.innerHTML)**(1/2) ;
-  
+
     } else if (op === '3√') {
 
       resultNode.innerHTML = parseFloat(resultNode.innerHTML)**(1/3) ;
-  
+
     } else if (op === 'x^3') {
 
       resultNode.innerHTML = parseFloat(resultNode.innerHTML)**3;
@@ -194,37 +200,36 @@ const buttonClicked = (event) => {
       resultNode.innerHTML = parseFloat(resultNode.innerHTML) * -1;
 
     } else if (op === 'n!') {
-      
+
       let result = 1;
       temp = parseInt(currData);
-      
+
       for ( ; temp > 0; temp--) {
         result *= temp;
       }
-      
+
       resultNode.innerHTML = result;
- 
+
     } else if (op === '|x|') {
 
       resultNode.innerHTML = Math.abs(currData);
-    
+
     }
-  
+
   }
 
   /* NOT AN OPERATION */
   if (booleanArray.every((x) => x === false)) {
 
-    if (op === 'π') {
+    if (constants['π'] || (parseFloat(op).constructor === Number) ) {
 
-      temp = resultNode.innerHTML.slice(-1); 
+      let num = (constants[op]) || parseFloat(op);
 
-      if (resultNode.innerHTML == 0) {
-        resultNode.innerHTML = Math.PI;
-      }
+      if (resultNode.innerHTML == 0)
+        resultNode.innerHTML = '';
 
-      if (binaryOps.includes(temp) || temp === '(' ) {
-          resultNode.innerHTML += Math.PI;
+      if ( resultNode.innerHTML.slice(-1).match(/[0-9*+-]|^$/g)) {
+        resultNode.innerHTML += num;
       }
 
     } else if (op === ')') { // CLOSE PARENTHESIS
@@ -232,13 +237,13 @@ const buttonClicked = (event) => {
 
       if (parseInt(currData.slice(-1)) >= 0 || (currData.slice(-1) == ')' && +(temp.dataset.count) ) ) {
         if (temp.dataset.count != 0) {
-          temp.dataset.count = parseInt(temp.dataset.count) - 1; 
+          temp.dataset.count = parseInt(temp.dataset.count) - 1;
           resultNode.innerHTML += ')';
         }
       }
 
     } else if (op === '(') { // OPEN PARENTHESIS
-      
+
       temp = resultNode.innerHTML;
 
       if (currData == 0) {
@@ -246,10 +251,10 @@ const buttonClicked = (event) => {
       } else if ( binaryOps.includes(currData.slice(-1))) {
        resultNode.innerHTML += '(';
       }
-      
+
       if (temp !== resultNode.innerHTML)
-        eventNode.dataset.count = parseInt(eventNode.dataset.count) + 1; 
-        
+        eventNode.dataset.count = parseInt(eventNode.dataset.count) + 1;
+
     } else if (op === '.' ) {   // DECIMAL
 
       let str = resultNode.innerHTML;
@@ -259,11 +264,7 @@ const buttonClicked = (event) => {
         resultNode.innerHTML += '.';
       }
 
-    } else if (parseFloat(op).constructor === Number && parseFloat(op).toString() !== 'NaN') {
 
-      temp = parseFloat(resultNode.innerHTML) == 0 ? parseFloat(op) : resultNode.innerHTML + parseFloat(op);
-      resultNode.innerHTML = temp;
-      
     } else if (op === '=') {  // EQUAL
 
       let str = resultNode.innerHTML;
@@ -274,18 +275,18 @@ const buttonClicked = (event) => {
       console.log(arrayOps);
 
       array.forEach((x)=> {
-        console.log(x);    
+        console.log(x);
       });
-    
-    } 
-    
+
+    }
+
   }
 
 
   /* CLEAR */
-  if  (op === 'C') { 
+  if  (op === 'C') {
 
-    resultNode.innerHTML = 0;   
+    resultNode.innerHTML = 0;
     document.querySelector("button[data-count]").dataset.count = 0 ;
 
   }
@@ -309,19 +310,19 @@ const buttonClicked = (event) => {
 */
 const parser = (str, a = null, b = null) => {
   let block;
-  a = str.indexOf('('); 
+  a = str.indexOf('(');
   b = str.indexOf(')');
 
   if (a !== -1) {
-    block = [a, b]; 
+    block = [a, b];
     console.log(block)
   }
-  
+
 };
 
 /*
-  Function: isBalanded 
-  Purpose: calculates whether input is balanced (via parenthesis)  
+  Function: isBalanded
+  Purpose: calculates whether input is balanced (via parenthesis)
 */
 
 const isBalanced = (str)=>   {
@@ -330,12 +331,12 @@ const isBalanced = (str)=>   {
 
   for (let c of str) {
 
-    if (c === '(') 
+    if (c === '(')
       openBraces.push(c);
-    
-    if (map[c] === openBraces[openBraces.length - 1] ) 
+
+    if (map[c] === openBraces[openBraces.length - 1] )
       openBraces.pop();
-      
+
   }
 
   return openBraces.length === 0;
