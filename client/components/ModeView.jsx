@@ -88,7 +88,7 @@ const View = ({blocksCount}) => {
         </span>
 
         <span className = {ViewCss.output}>
-          <span> {0}  </span>
+          <span>{0}</span>
         </span>
 
       </div>
@@ -221,49 +221,47 @@ const buttonClicked = (event) => {
   /* NOT AN OPERATION */
   if (booleanArray.every((x) => x === false)) {
 
-    if (constants['π'] || (parseFloat(op).constructor === Number) ) {
+    if (constants[op] || op.match(/[0-9]/)) {
+      temp = (constants[op]) || parseFloat(op);
 
-      let num = (constants[op]) || parseFloat(op);
+      if (resultNode.innerHTML == 0 && resultNode.innerHTML.length === 1)
+        resultNode.innerHTML = temp;
 
-      if (resultNode.innerHTML == 0)
-        resultNode.innerHTML = '';
+      else if ( resultNode.innerHTML.slice(-1).match(/[0-9*+-÷\()]|^$/g))
+        resultNode.innerHTML += temp;
 
-      if ( resultNode.innerHTML.slice(-1).match(/[0-9*+-]|^$/g)) {
-        resultNode.innerHTML += num;
-      }
+
 
     } else if (op === ')') { // CLOSE PARENTHESIS
-      temp = eventNode.previousSibling;
 
-      if (parseInt(currData.slice(-1)) >= 0 || (currData.slice(-1) == ')' && +(temp.dataset.count) ) ) {
-        if (temp.dataset.count != 0) {
-          temp.dataset.count = parseInt(temp.dataset.count) - 1;
-          resultNode.innerHTML += ')';
-        }
+      if (resultNode.innerHTML.match(/.+[0-9\)]$/g)) {
+
+        if (eventNode.previousSibling.dataset.count != 0)
+          eventNode.previousSibling.dataset.count = parseInt(eventNode.previousSibling.dataset.count) - 1;
+
+        resultNode.innerHTML += ')';
+
       }
 
     } else if (op === '(') { // OPEN PARENTHESIS
 
-      temp = resultNode.innerHTML;
+      temp = resultNode.innerHTML ;
 
-      if (currData == 0) {
+      if (resultNode.innerHTML.match(/^0$/g))
         resultNode.innerHTML = '(';
-      } else if ( binaryOps.includes(currData.slice(-1))) {
-       resultNode.innerHTML += '(';
-      }
 
-      if (temp !== resultNode.innerHTML)
-        eventNode.dataset.count = parseInt(eventNode.dataset.count) + 1;
+      if (resultNode.innerHTML.match(/.+[*+-÷]$/g))
+        resultNode.innerHTML += '(';
+
+      if (temp !=resultNode.innerHTML )
+      document.querySelector("button[data-count]").dataset.count = parseInt(document.querySelector("button[data-count]").dataset.count) + 1;
+
+      return;
 
     } else if (op === '.' ) {   // DECIMAL
 
-      let str = resultNode.innerHTML;
-      let array = str.split(/[*+-]/);
-
-      if (str == 0 || array[array.length -1].indexOf('.') === - 1) {
+      if (resultNode.innerHTML.match(/(?<!\d+\.)\d$/))
         resultNode.innerHTML += '.';
-      }
-
 
     } else if (op === '=') {  // EQUAL
 
