@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import ViewCss from './ModeView.css'
 
 const View = ({blocksCount}) => {
+  const [dataCount, OpenParenthesisCount] = useState(0);
 
   return (
     <div className = {ViewCss.container}>
@@ -68,10 +69,10 @@ const View = ({blocksCount}) => {
           <button onClick = {buttonClicked} value = {"-"}className = {ViewCss.item}> {'-'} </button>
 
           <button className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} value = {'2^x'} className = {ViewCss.item}> {'2^x'} </button>
           <button onClick = {buttonClicked} value = {'3√'} className = {ViewCss.item}> {'3√'} </button>
           <button onClick = {buttonClicked} value = {'2√'} className = {ViewCss.item}> {'2√'} </button>
+          <button onClick = {buttonClicked} value = {1} className = {ViewCss.item}> {'1'} </button>
           <button onClick = {buttonClicked} value = {2} className = {ViewCss.item}> {'2'} </button>
           <button onClick = {buttonClicked} value = {3} className = {ViewCss.item}> {'3'} </button>
           <button onClick = {buttonClicked} value = {"+"}className = {ViewCss.item}> {'+'} </button>
@@ -87,8 +88,7 @@ const View = ({blocksCount}) => {
         </span>
 
         <span className = {ViewCss.output}>
-          <div> {0}  </div>
-          {/* <div> {''}  </div> */}
+          <span> {0}  </span>
         </span>
 
       </div>
@@ -103,22 +103,17 @@ export default View;
 const buttonClicked = (event) => {
   let eventNode =  event.currentTarget;
   let parentNode = eventNode.parentNode;
-  let resultNode = parentNode.nextSibling.childNodes[0] ;
-
+  let resultNode = parentNode.nextSibling.childNodes[0];
   let op = event.currentTarget.value;
-  let data = parseFloat(op) ;
   let currData =  resultNode.innerHTML ;
-  let currDataSplitByBinaryOps =  (currData.split(/[*%÷+]/));
-
-  let temp, count;
-  let binaryOps = ['*', '+', '-', '%', '÷','y√x'];
-  let UnaryOps = ['√', 'x^3', 'x^2', '1/x', '+/-', 'n!', '|x|', '2√', '3√', '2^x', 'e^x'];
+  let binaryOps = ['*', '+', '-', '%', '÷','y√x', 'e^x'];
+  let UnaryOps = ['√', 'x^3', 'x^2', '1/x', '+/-', 'n!', '|x|', '2√', '3√', '2^x'];
   let booleanArray = [binaryOps.includes(op), UnaryOps.includes(op)];
+  let temp, count;
 
-/* 
-  BINARY OPERATIONS
-*/
+/* BINARY OPERATIONS */
   if (booleanArray[0]) { 
+
     if (!(currData !== ')' || Number.isInteger(currData))) {return};
 
     if (binaryOps.includes(currData.slice(-1))) {
@@ -146,13 +141,28 @@ const buttonClicked = (event) => {
 
     } else if (op === 'y√x') {
 
+    } else if (op === 'e^x') {
+
+      if ( !isBalanced(resultNode.innerHTML) ) return ;
+
+      let array = resultNode.innerHTML.split(/(?<=\)|[+*÷-]\d)[+*÷-]/);
+      let opArray = resultNode.innerHTML.match(/(?<=\)|[+*÷-]\d)[+*÷-]/g);
+      let data = array[array.length - 1];
+      let str = '';
+
+      data = (data[0] === '(') ? data.slice(1, data.length - 1): data;
+      array[array.length - 1] = `e^(${data})`;
+
+      array.forEach( (ele, idx, collection) => {
+        str += (idx < collection.length - 1 ) ? ele + opArray[idx] : ele;
+      });
+
+      resultNode.innerHTML = str; 
     }
 
   }
 
-/*
-  UNARY OPERATIONS
-*/  
+/* UNARY OPERATIONS */  
   if (booleanArray[1] && !booleanArray[0] ) {    
   
     if (op === '2^x') {
@@ -198,10 +208,6 @@ const buttonClicked = (event) => {
 
       resultNode.innerHTML = Math.abs(currData);
     
-    } else if (op === 'e^x') {
-
-      resultNode.innerHTML = Math.exp(currData)
-
     }
   
   }
@@ -222,17 +228,12 @@ const buttonClicked = (event) => {
       }
 
     } else if (op === ')') { // CLOSE PARENTHESIS
+      temp = eventNode.previousSibling;
 
-      if (eventNode.previousSibling.style.color) {
-        if (parseInt(currData.slice(-1)) >= 0 || (currData.slice(-1) == ')' && +(eventNode.previousSibling.dataset.count) ) ) {
-          if (eventNode.previousSibling.dataset.count != 0) {
-            eventNode.previousSibling.dataset.count = parseInt(eventNode.previousSibling.dataset.count) - 1; 
-            resultNode.innerHTML += ')';
-          }
-          if (eventNode.previousSibling.dataset.count == 0) {
-              eventNode.previousSibling.style.color = '';
-          }
-
+      if (parseInt(currData.slice(-1)) >= 0 || (currData.slice(-1) == ')' && +(temp.dataset.count) ) ) {
+        if (temp.dataset.count != 0) {
+          temp.dataset.count = parseInt(temp.dataset.count) - 1; 
+          resultNode.innerHTML += ')';
         }
       }
 
@@ -248,28 +249,7 @@ const buttonClicked = (event) => {
       
       if (temp !== resultNode.innerHTML)
         eventNode.dataset.count = parseInt(eventNode.dataset.count) + 1; 
-
-      if (resultNode.innerHTML.slice(-1) === '(') 
-        eventNode.style.color = 'silver';
-      
-    } else if  (op === 'C') { // CLEAR
-
-      resultNode.innerHTML = 0;
-      document.querySelector('button[data-count]').dataset.count = 0;
-      document.querySelector('button[data-count]').style.color = '';
-      
-    } else if (op === 'del') {
-      
-      if ( (resultNode.innerHTML.length  === 1 && resultNode.innerHTML == 0)  ) {
-        resultNode.innerHTML = 0;
-        count = resultNode.innerHTML.length - 1;
-
-        while (resultNode.innerHTML[count] == ' ')
-          --count;
-
-        resultNode.innerHTML = resultNode.innerHTML.slice(0, count);
-      }
-      
+        
     } else if (op === '.' ) {   // DECIMAL
 
       let str = resultNode.innerHTML;
@@ -279,9 +259,9 @@ const buttonClicked = (event) => {
         resultNode.innerHTML += '.';
       }
 
-    } else if (data.constructor === Number && data.toString() !== 'NaN') {
+    } else if (parseFloat(op).constructor === Number && parseFloat(op).toString() !== 'NaN') {
 
-      temp = parseFloat(resultNode.innerHTML) == 0 ? data : resultNode.innerHTML + data;
+      temp = parseFloat(resultNode.innerHTML) == 0 ? parseFloat(op) : resultNode.innerHTML + parseFloat(op);
       resultNode.innerHTML = temp;
       
     } else if (op === '=') {  // EQUAL
@@ -301,6 +281,24 @@ const buttonClicked = (event) => {
     
   }
 
+
+  /* CLEAR */
+  if  (op === 'C') { 
+
+    resultNode.innerHTML = 0;   
+    document.querySelector("button[data-count]").dataset.count = 0 ;
+
+  }
+
+  /* DELETE */
+  if (op === 'del') {
+
+    resultNode.innerHTML = (resultNode.innerHTML.length === 1) ? 0 : resultNode.innerHTML.slice(0, resultNode.innerHTML.length - 1);
+
+    document.querySelector("button[data-count]").dataset.count = isBalanced(resultNode.innerHTML)  ? 0 : resultNode.innerHTML.match(/[(]/g).length;
+
+  }
+
   resultNode.innerHTML = parser(resultNode.innerHTML) || resultNode.innerHTML;
 };
 
@@ -309,18 +307,16 @@ const buttonClicked = (event) => {
   Function: parser
   Purpose: reduce operation, removing parenthesis if possible
 */
-const parser = (str) => {
-  let a,b;
+const parser = (str, a = null, b = null) => {
   let block;
-
-  if (!isBalanced(str)) {return};
-  
   a = str.indexOf('('); 
   b = str.indexOf(')');
 
   if (a !== -1) {
     block = [a, b]; 
+    console.log(block)
   }
+  
 };
 
 /*
@@ -344,3 +340,4 @@ const isBalanced = (str)=>   {
 
   return openBraces.length === 0;
 };
+
