@@ -209,7 +209,8 @@ const buttonClicked = (event) => {
         result *= temp;
       }
 
-      resultNode.innerHTML = result;
+      if (currData != 0)
+        resultNode.innerHTML = result;
 
     } else if (op === '|x|') {
 
@@ -222,13 +223,16 @@ const buttonClicked = (event) => {
   /* NOT AN OPERATION */
   if (booleanArray.every((x) => x === false)) {
 
-    if ((constants[op] || op.match(/[0-9]/)) ) {
+    if ((constants[op] || op.match(/[0-9]/))  ) {
       temp = (constants[op]) || parseFloat(op);
 
-      if (resultNode.innerHTML == 0 && resultNode.innerHTML.length === 1)
+      if (resultNode.innerHTML.match(/(?<=[\d*\.])\d+$/))
+        return
+
+      if (resultNode.innerHTML.match(/^0$/))
         resultNode.innerHTML = temp;
 
-      else if ( resultNode.innerHTML.slice(-1).match(/[0-9*+-÷\()]|^$/g))
+      else if ( resultNode.innerHTML.slice(-1).match(/[0-9*+-÷\()]/g))
         resultNode.innerHTML += temp;
 
 
