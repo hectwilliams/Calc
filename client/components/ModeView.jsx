@@ -241,7 +241,7 @@ const buttonClicked = (event) => {
 
     } else if (op === ')') { // CLOSE PARENTHESIS
 
-      if (resultNode.innerHTML.match(/(?<=\(\d+)\d+\.\d|\)|\d$/) && !balanced  && !resultNode.innerHTML.match(/\($/) ) {
+      if (resultNode.innerHTML.match(/(?<=\(\d+)\d+\.\d|\)|\d$/) && !balanced  && !resultNode.innerHTML.match(/[\(*+\-÷]$/) ) {
 
         if (eventNode.previousSibling.dataset.count != 0)
           eventNode.previousSibling.dataset.count = parseInt(eventNode.previousSibling.dataset.count) - 1;
@@ -305,7 +305,9 @@ const buttonClicked = (event) => {
 
   }
 
-  resultNode.innerHTML = parser(resultNode.innerHTML) || resultNode.innerHTML;
+  if (isBalanced(resultNode.innerHTML))
+    resultNode.innerHTML = Parser(resultNode.innerHTML).run() ||  resultNode.innerHTML;
+
 };
 
 
@@ -313,14 +315,62 @@ const buttonClicked = (event) => {
   Function: parser
   Purpose: reduce operation, removing parenthesis if possible
 */
-const parser = (str, a = null, b = null) => {
-  let block;
-  a = str.indexOf('(');
-  b = str.indexOf(')');
+const Parser = function(initString) {
 
-  if (a !== -1) {
-    block = [a, b];
-    console.log(block)
+  if (!(this instanceof(Parser)))
+    return new Parser(initString);
+
+  this.str = initString;
+
+  this.searchParenthesis = function (str, a, b) {
+
+    let open = [];
+    let close = [];
+
+    str.split('').forEach((ele, index) => {
+
+      if (ele === '(')
+        open.push(index);
+
+      if (ele === ')')
+        close.push(index)
+
+    });
+
+    open.forEach((ele, index) => {
+      close[index] = [ele, close[index]];
+    });
+
+
+    close.forEach((ele) => {
+      str = this.run.call(this, str.slice(ele[0] + 1, ele[1]));
+      // update str
+    });
+    return str;
+  };
+
+  this.searchExponent = function () {
+
+  };
+
+  this.searchMult = function () {
+
+  };
+
+  this.searchDiv = function () {
+
+  };
+
+  this.searchAdd = function () {
+
+  };
+
+  this.searchSub = function () {
+
+  };
+
+  this.run = (str = this.str) => {
+    return this.searchParenthesis.call(this, str);
   }
 
 };
