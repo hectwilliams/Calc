@@ -3,9 +3,11 @@ import ReactDOM from 'react-dom';
 import ViewCss from './ModeView.css'
 
 const View = ({blocksCount}) => {
+
   const [dataCount, OpenParenthesisCount] = useState(0);
 
   return (
+
     <div className = {ViewCss.container}>
 
       <div className = {ViewCss.itemBar_}> </div>         {/* Black BAR */}
@@ -108,25 +110,20 @@ const buttonClicked = (event) => {
   let currData =  resultNode.innerHTML ;
   let constants = {'π': Math.PI};
 
-  let binaryOps = ['*', '+', '-', '%', '÷','y√x', 'e^x'];
-  let UnaryOps = ['√', 'x^3', 'x^2', '1/x', '+/-', 'n!', '|x|', '2√', '3√', '2^x'];
+  let binaryOps = ['*', '+', '-', '%', '÷','y√x'];
+  let UnaryOps = ['√', 'x^3', 'x^2', '1/x', '+/-', 'n!', '|x|', '2√', '3√', '2^x',  'e^x'];
   let booleanArray = [binaryOps.includes(op), UnaryOps.includes(op)];
   let balanced = isBalanced(resultNode.innerHTML);
-  let temp, count;
+  let temp;
 
   if (resultNode.innerHTML === 'NaN') {
     resultNode.innerHTML = 0;
   }
 
 /* BINARY OPERATIONS */
-  if (booleanArray[0]) {
+  if (booleanArray[0] && resultNode.innerHTML.match(/[0-9\)]$/)) {
 
-    if (!(currData !== ')' || Number.isInteger(currData))) {return};
-
-    if (binaryOps.includes(currData.slice(-1))) {
-      resultNode.innerHTML =  resultNode.innerHTML.slice(0, resultNode.innerHTML.length - 1 ) + op;
-      return;
-    } else if (op === '*') { // mult
+    if (op === '*') {
 
       resultNode.innerHTML += '*';
 
@@ -147,6 +144,13 @@ const buttonClicked = (event) => {
       resultNode.innerHTML += '÷';
 
     } else if (op === 'y√x') {
+      let y = parseInt(prompt("Enter y value", 2));
+      let x = parseFloat(resultNode.innerHTML);
+
+      if (!Number.isFinite(y) || !x )
+        return;
+
+      console.log(x ** (1/y));  // TODO - replace prompt with modal
 
     } else if (op === 'e^x') {
 
@@ -170,7 +174,7 @@ const buttonClicked = (event) => {
   }
 
 /* UNARY OPERATIONS */
-  if ( booleanArray[1] && !booleanArray[0] && resultNode.innerHTML.match(/^.(?![÷+\-*])/) ) {
+  if ( booleanArray[1] && !booleanArray[0] && resultNode.innerHTML.match(/^\d(?![÷+\-*])/) ) {
 
     if (op === '2^x') {
 
@@ -226,7 +230,6 @@ const buttonClicked = (event) => {
     if ((constants[op] || op.match(/[0-9]/))  ) {
       temp = (constants[op]) || parseFloat(op);
 
-
       if (resultNode.innerHTML.match(/^0$/))
         resultNode.innerHTML = temp;
 
@@ -236,11 +239,9 @@ const buttonClicked = (event) => {
       else if ( resultNode.innerHTML.slice(-1).match(/[0-9*+-÷\()]/g))
         resultNode.innerHTML += temp;
 
-
-
     } else if (op === ')') { // CLOSE PARENTHESIS
 
-      if (resultNode.innerHTML.match(/(?<=\(\d*)\d+|\d+\.\d+|\)$/) && !balanced) {
+      if (resultNode.innerHTML.match(/(?<=\(\d+)\d+\.\d|\)|\d$/) && !balanced  && !resultNode.innerHTML.match(/\($/) ) {
 
         if (eventNode.previousSibling.dataset.count != 0)
           eventNode.previousSibling.dataset.count = parseInt(eventNode.previousSibling.dataset.count) - 1;
@@ -256,7 +257,7 @@ const buttonClicked = (event) => {
       if (resultNode.innerHTML.match(/^0$/g))
         resultNode.innerHTML = '(';
 
-      else if (resultNode.innerHTML.match(/.+[\(*+-÷]$|\($/g))
+      else if (resultNode.innerHTML.match(/.+[\(*+\-÷]$|\($/g))
         resultNode.innerHTML += '(';
 
       if (temp !=resultNode.innerHTML )
