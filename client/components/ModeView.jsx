@@ -322,31 +322,29 @@ const Parser = function(initString) {
 
   this.str = initString;
 
-  this.searchParenthesis = function (str, a, b) {
-
+  this.searchParenthesis = function (str) {
     let open = [];
     let close = [];
 
-    str.split('').forEach((ele, index) => {
-
+    str.split('').forEach((ele, index) => { // find last sub balanced tangent(i.e. parenthesis)
       if (ele === '(')
         open.push(index);
 
       if (ele === ')')
-        close.push(index)
-
+        close.push(index);
     });
 
-    open.forEach((ele, index) => {
-      close[index] = [ele, close[index]];
+    open.reverse().forEach((val, index) => {
+      close[index] = [val, close[index]];
     });
 
+    if (close.length) {
+      let [a,b] = close[close.length - 1];
+      str = str.slice(0, a) + this.searchParenthesis.call(this, str.slice(a + 1, b)) + str.slice(b + 1);
+    }
 
-    close.forEach((ele) => {
-      str = this.run.call(this, str.slice(ele[0] + 1, ele[1]));
-      // update str
-    });
     return str;
+
   };
 
   this.searchExponent = function () {
