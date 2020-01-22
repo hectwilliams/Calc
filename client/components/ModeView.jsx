@@ -86,7 +86,7 @@ const View = ({blocksCount}) => {
           <button onClick = {buttonClicked}  value = {"+/-"} className = {ViewCss.item}> {'+/-'} </button>
           <button onClick = {buttonClicked}  value = {0} className = {ViewCss.item}> {'0'} </button>
           <button onClick = {buttonClicked}  value = {'.'} className = {ViewCss.item}> {'.'} </button>
-          <button onClick = {buttonClicked}  value = {"="}className = {ViewCss.item}> {'='} </button>
+          <button data-buffer = {0} onClick = {buttonClicked}  value = {"="}className = {ViewCss.item}> {'='} </button>
         </span>
 
         <span className = {ViewCss.output}>
@@ -109,9 +109,10 @@ const buttonClicked = (event) => {
   let op = event.currentTarget.value;
   let currData =  resultNode.innerHTML ;
   let constants = {'π': Math.PI};
+  let bufferNode = document.querySelector("button[data-buffer]");
 
-  let binaryOps = ['*', '+', '-', '%', '÷','y√x'];
-  let UnaryOps = ['√', 'x^3', 'x^2', '1/x', '+/-', 'n!', '|x|', '2√', '3√', '2^x',  'e^x'];
+  let binaryOps = ['*', '+', '-', '%', '÷','y√x', 'e^x'];
+  let UnaryOps = ['√', 'x^3', 'x^2', '1/x', '+/-', 'n!', '|x|', '2√', '3√', '2^x'];
   let booleanArray = [binaryOps.includes(op), UnaryOps.includes(op)];
   let balanced = isBalanced(resultNode.innerHTML);
   let temp;
@@ -154,21 +155,34 @@ const buttonClicked = (event) => {
 
     } else if (op === 'e^x') {
 
-      if ( !isBalanced(resultNode.innerHTML) ) return ;
+      let closedDigitFound = resultNode.innerHTML.match(/\(\d+\.\d+|\(\d+(?=\)$)/);
+      let singleDigitFound = resultNode.innerHTML.match(/\d+$|\d+\.\d+$/);
+      let closedOpFound = resultNode.innerHTML.match(/(\(*\()(?!\()/g);
 
-      let array = resultNode.innerHTML.split(/(?<=\)|[+*÷-]\d)[+*÷-]/);
-      let opArray = resultNode.innerHTML.match(/(?<=\)|[+*÷-]\d)[+*÷-]/g);
-      let data = array[array.length - 1];
-      let str = '';
+      temp = resultNode.innerHTML;
 
-      data = (data[0] === '(') ? data.slice(1, data.length - 1): data;
-      array[array.length - 1] = `e^(${data})`;
+      if (!isBalanced(resultNode.innerHTML)) return;
 
-      array.forEach( (ele, idx, collection) => {
-        str += (idx < collection.length - 1 ) ? ele + opArray[idx] : ele;
-      });
+      if (closedDigitFound)
+        resultNode.innerHTML = resultNode.innerHTML.slice(0,closedDigitFound.index) +  'e^(' + closedDigitFound[0].slice(1) + ')';
 
-      resultNode.innerHTML = str;
+      else if (singleDigitFound)
+        resultNode.innerHTML = resultNode.innerHTML.slice(0, singleDigitFound.index) +  'e^(' + singleDigitFound[0].slice(0) + ')';
+
+      else if (closedOpFound) {
+        let obj = closedOpFound.reduce((result, token, i) => {
+          let searchedIndex = result.string.indexOf(token);
+          result.index += searchedIndex;
+          result.string = ' ' + result.string.slice(searchedIndex + 1);
+            return result;
+          }, {index: 0, string: resultNode.innerHTML, len: resultNode.innerHTML.length});
+
+        resultNode.innerHTML = resultNode.innerHTML.slice(0, obj.index) +  'e^' + resultNode.innerHTML.slice(obj.index) ;
+      }
+
+      if (resultNode.innerHTML.indexOf('e^e^') !== -1)
+        resultNode.innerHTML = temp;
+
     }
 
   }
@@ -270,23 +284,14 @@ const buttonClicked = (event) => {
       if (resultNode.innerHTML.match(/(?<!\.[0-9]*)\d$/))
         resultNode.innerHTML += '.';
 
-    } else if (op === '=') {  // EQUAL
-
-      let str = resultNode.innerHTML;
-      let array = str.split(/[*+-]/);
-      let arrayOps = str.match(/[*+-]/g);
-
-      console.log(array);
-      console.log(arrayOps);
-
-      array.forEach((x)=> {
-        console.log(x);
-      });
-
     }
 
   }
 
+  if (op === '=') {  // EQUAL
+    if (isBalanced(resultNode.innerHTML))
+    resultNode.innerHTML = Parser(resultNode.innerHTML).run() || resultNode.innerHTML;
+  }
 
   /* CLEAR */
   if  (op === 'C') {
@@ -305,11 +310,7 @@ const buttonClicked = (event) => {
 
   }
 
-  if (isBalanced(resultNode.innerHTML))
-    resultNode.innerHTML = Parser(resultNode.innerHTML).run() ||  resultNode.innerHTML;
-
 };
-
 
 /*
   Function: parser
@@ -324,34 +325,97 @@ const Parser = function(initString) {
 
   this.searchParenthesis = function (str) {
     let open = [];
-    let close = [];
+    let tangentList = [];
 
-    str.split('').forEach((ele, index) => { // find last sub balanced tangent(i.e. parenthesis)
+    str.split('').forEach((ele, index) => {     // find last sub balanced tangent(i.e. parenthesis)
+
       if (ele === '(')
         open.push(index);
 
       if (ele === ')')
-        close.push(index);
+      tangentList.push([open.pop(), index]);
+
     });
 
-    open.reverse().forEach((val, index) => {
-      close[index] = [val, close[index]];
-    });
+    if (tangentList.length) {
 
-    if (close.length) {
-      let [a,b] = close[close.length - 1];
-      str = str.slice(0, a) + this.searchParenthesis.call(this, str.slice(a + 1, b)) + str.slice(b + 1);
+      if (tangentList[tangentList.length - 1].length === 2) {
+        let [a, b] = tangentList[tangentList.length - 1];
+        str = str.slice(0, a) + this.searchExponent.call(this, str.slice(a + 1, b)) + str.slice(b + 1);
+      }
+
+    }
+
+    while (str.indexOf('(') !== -1) {
+      str = this.searchParenthesis.call(this, str);
     }
 
     return str;
 
   };
 
-  this.searchExponent = function () {
+
+
+  this.searchExponent = function (str) {
+    let open = [];
+    let tangentList = [];
+
+    str.split('').forEach((ele, idx) => {
+
+      if (ele.indexOf('e^(') === 0)
+        open.push(idx);
+
+      if (ele === ')')
+        tangentList.push([open.pop(), idx]);
+    });
+
+    if (tangentList.length) {
+
+      if (tangentList[tangentList.length - 1].length === 2){
+
+        let [a, b] = tangentList[tangentList.length - 1];
+        str = str.slice(0, a) + '2.71828182846' + '**' + this.searchParenthesis.call(this, str.slice(a + 1, b)) + str.slice(b + 1);
+
+      }
+
+    }
+
+    return this.searchMult.call(this, str);
 
   };
 
-  this.searchMult = function () {
+  this.searchMult = function (str) {
+
+    let int_int = str.match(/\d+\*\d+/);
+    let dec_int = str.match(/\d+\*\d+\.\d+/);
+    let int_dec = str.match(/\d+\.\d+\*\d+/);
+    let dec_dec = str.match(/\d+\.\d+\*\d+\.\d/);
+    let regexObj ,a ,b;
+
+    if (int_int)
+    regexObj = int_int;
+
+    if (dec_int)
+    regexObj = dec_int;
+
+    if (dec_dec)
+    regexObj = dec_decß;
+
+    if (int_dec)
+    regexObj = int_dec;
+
+    if (regexObj) {
+      a = regexObj.index;
+      b = a + regexObj[0].length;
+      str = str.slice(0, a) + regexObj[0].split('*').reduce((acc, curr) => parseFloat(acc) * parseFloat(curr)) + str.slice(b + 1);
+    }
+
+    while (str.indexOf('*') !== -1) {
+      console.log(str);
+      str = this.searchMult.call(this, str);
+    }
+
+    return str;
 
   };
 
