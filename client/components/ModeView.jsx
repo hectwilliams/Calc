@@ -154,23 +154,27 @@ const buttonClicked = (event) => {
       console.log(x ** (1/y));  // TODO - replace prompt with modal
 
     } else if (op === 'e^x') {
-
-      let closedDigitFound = resultNode.innerHTML.match(/\(\d+\.\d+|\(\d+(?=\)$)/);
-      let singleDigitFound = resultNode.innerHTML.match(/\d+$|\d+\.\d+$/);
-      let closedOpFound = resultNode.innerHTML.match(/(\(*\()(?!\()/g);
+      let case0 = resultNode.innerHTML.match(/^\(.+\)$/);
+      let case1 = resultNode.innerHTML.match(/\(\d+\.\d+|\(\d+(?=\)$)/);
+      let case2 = resultNode.innerHTML.match(/\d+$|\d+\.\d+$/);
+      let case3 = resultNode.innerHTML.match(/(\(*\()(?!\()/g);
 
       temp = resultNode.innerHTML;
 
+
       if (!isBalanced(resultNode.innerHTML)) return;
 
-      if (closedDigitFound)
-        resultNode.innerHTML = resultNode.innerHTML.slice(0,closedDigitFound.index) +  'e^(' + closedDigitFound[0].slice(1) + ')';
+      if (case0)
+        resultNode.innerHTML = resultNode.innerHTML.slice(0,case0.index) +  'e^(' + case0[0].slice(1);
 
-      else if (singleDigitFound)
-        resultNode.innerHTML = resultNode.innerHTML.slice(0, singleDigitFound.index) +  'e^(' + singleDigitFound[0].slice(0) + ')';
+      else if (case1)
+        resultNode.innerHTML = resultNode.innerHTML.slice(0,case1.index) +  'e^(' + case1[0].slice(1) + ')';
 
-      else if (closedOpFound) {
-        let obj = closedOpFound.reduce((result, token, i) => {
+      else if (case2)
+        resultNode.innerHTML = resultNode.innerHTML.slice(0, case2.index) +  'e^(' + case2[0].slice(0) + ')';
+
+      else if (case3) {
+        let obj = case3.reduce((result, token, i) => {
           let searchedIndex = result.string.indexOf(token);
           result.index += searchedIndex;
           result.string = ' ' + result.string.slice(searchedIndex + 1);
@@ -350,34 +354,21 @@ const Parser = function(initString) {
       str = this.searchParenthesis.call(this, str);
     }
 
-    return str;
+    return str = this.searchExponent.call(this, str);
 
   };
 
 
 
   this.searchExponent = function (str) {
-    let open = [];
-    let tangentList = [];
+    const EULER_NUMBER = 2.71828182846;
+    let obj = str.match(/e\^\d+\.\d+|e\^\d+/);
 
-    str.split('').forEach((ele, idx) => {
+    if (obj)
+      str = str.slice(0, obj.index) +  EULER_NUMBER + '**' +'('+ str.slice(obj.index + 2) + ')';
 
-      if (ele.indexOf('e^(') === 0)
-        open.push(idx);
-
-      if (ele === ')')
-        tangentList.push([open.pop(), idx]);
-    });
-
-    if (tangentList.length) {
-
-      if (tangentList[tangentList.length - 1].length === 2){
-
-        let [a, b] = tangentList[tangentList.length - 1];
-        str = str.slice(0, a) + '2.71828182846' + '**' + this.searchParenthesis.call(this, str.slice(a + 1, b)) + str.slice(b + 1);
-
-      }
-
+    while (str.indexOf('e') !== -1) {
+      str = str.searchExponent.call(this, str);
     }
 
     return this.searchMult.call(this, str);
@@ -385,50 +376,113 @@ const Parser = function(initString) {
   };
 
   this.searchMult = function (str) {
-
-    let int_int = str.match(/\d+\*\d+/);
-    let dec_int = str.match(/\d+\*\d+\.\d+/);
-    let int_dec = str.match(/\d+\.\d+\*\d+/);
-    let dec_dec = str.match(/\d+\.\d+\*\d+\.\d/);
-    let regexObj ,a ,b;
+    let int_int = str.match(/-*\d+\*\d+/);
+    let dec_int = str.match(/-*\d+\*\d+\.\d+/);
+    let int_dec = str.match(/-*\d+\.\d+\*\d+/);
+    let dec_dec = str.match(/-*\d+\.\d+\*\d+\.\d/);
+    let regexObj, a ,b;
 
     if (int_int)
-    regexObj = int_int;
-
+      regexObj = int_int;
     if (dec_int)
-    regexObj = dec_int;
-
-    if (dec_dec)
-    regexObj = dec_decß;
-
+      regexObj = dec_int;
     if (int_dec)
-    regexObj = int_dec;
+      regexObj = int_dec;
+    if (dec_dec)
+      regexObj = dec_dec;
+
 
     if (regexObj) {
       a = regexObj.index;
       b = a + regexObj[0].length;
-      str = str.slice(0, a) + regexObj[0].split('*').reduce((acc, curr) => parseFloat(acc) * parseFloat(curr)) + str.slice(b + 1);
+      str = str.slice(0, a) + regexObj[0].split('*').reduce((acc, curr) => parseFloat(acc) * parseFloat(curr)) + str.slice(b);
     }
 
     while (str.indexOf('*') !== -1) {
-      console.log(str);
-      str = this.searchMult.call(this, str);
+      if (str.indexOf('*') === str.indexOf('**'))
+        break;
+      str = this.searchParenthesis.call(this, str);
+    }
+
+    return this.searchDiv.call(this, str);
+
+  };
+
+  this.searchDiv = function (str) {
+    let int_int = str.match(/-*\d+\÷\d+/);
+    let dec_int = str.match(/-*\d+\÷\d+\.\d+/);
+    let int_dec = str.match(/-*\d+\.\d+\÷\d+/);
+    let dec_dec = str.match(/-*\d+\.\d+\÷\d+\.\d/);
+    let regexObj, a ,b;
+
+    if (int_int)
+      regexObj = int_int;
+    if (dec_int)
+      regexObj = dec_int;
+    if (int_dec)
+      regexObj = int_dec;
+    if (dec_dec)
+      regexObj = dec_dec;
+
+
+    if (regexObj) {
+      a = regexObj.index;
+      b = a + regexObj[0].length;
+      str = str.slice(0, a) + regexObj[0].split('÷').reduce((acc, curr) => parseFloat(acc) / parseFloat(curr)) + str.slice(b);
+    }
+
+    return this.searchAdd.call(this, str);
+  };
+
+  this.searchAdd = function (str) {
+    let int_int = str.match(/-*\d+\+\d+/);
+    let dec_int = str.match(/-*\d+\+\d+\.\d+/);
+    let int_dec = str.match(/-*\d+\.\d+\+\d+/);
+    let dec_dec = str.match(/-*\d+\.\d+\+\d+\.\d/);
+    let regexObj, a ,b;
+
+    if (int_int)
+      regexObj = int_int;
+    if (dec_int)
+      regexObj = dec_int;
+    if (int_dec)
+      regexObj = int_dec;
+    if (dec_dec)
+      regexObj = dec_dec;
+
+
+    if (regexObj) {
+      a = regexObj.index;
+      b = a + regexObj[0].length;
+      str = str.slice(0, a) + regexObj[0].split('+').reduce((acc, curr) => parseFloat(acc) + parseFloat(curr)) + str.slice(b);
+    }
+
+    return this.searchSub.call(this, str);
+  };
+
+  this.searchSub = function (str) {
+    let int_int = str.match(/\d+\-\d+/);
+    let dec_int = str.match(/\d+\-\d+\.\d+/);
+    let int_dec = str.match(/\d+\.\d+\-\d+/);
+    let dec_dec = str.match(/\d+\.\d+\-\d+\.\d/);
+    let regexObj, a ,b;
+
+    if (int_int)
+      regexObj = int_int;
+    if (dec_int)
+      regexObj = dec_int;
+    if (int_dec)
+      regexObj = int_dec;
+    if (dec_dec)
+      regexObj = dec_dec;
+
+    if (regexObj) {
+      a = regexObj.index;
+      b = a + regexObj[0].length;
+      str = str.slice(0, a) + regexObj[0].split('-').reduce((acc, curr) => parseFloat(acc) - parseFloat(curr)) + str.slice(b);
     }
 
     return str;
-
-  };
-
-  this.searchDiv = function () {
-
-  };
-
-  this.searchAdd = function () {
-
-  };
-
-  this.searchSub = function () {
-
   };
 
   this.run = (str = this.str) => {
