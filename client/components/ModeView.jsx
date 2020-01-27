@@ -107,9 +107,7 @@ const buttonClicked = (event) => {
   let parentNode = eventNode.parentNode;
   let resultNode = parentNode.nextSibling.childNodes[0];
   let op = event.currentTarget.value;
-  let currData =  resultNode.innerHTML ;
   let constants = {'π': Math.PI};
-  let bufferNode = document.querySelector("button[data-buffer]");
 
   let binaryOps = ['*', '+', '-', '%', '÷','y√x', 'e^x'];
   let UnaryOps = ['√', 'x^3', 'x^2', '1/x', '+/-', 'n!', '|x|', '2√', '3√', '2^x'];
@@ -154,13 +152,13 @@ const buttonClicked = (event) => {
       console.log(x ** (1/y));  // TODO - replace prompt with modal
 
     } else if (op === 'e^x') {
-      let case0 = resultNode.innerHTML.match(/^\(.+\)$/);
+      let case0 = resultNode.innerHTML.match(/^\(\d+\)$|^\(\d+\.\d+\)$/);
       let case1 = resultNode.innerHTML.match(/\(\d+\.\d+|\(\d+(?=\)$)/);
       let case2 = resultNode.innerHTML.match(/\d+$|\d+\.\d+$/);
       let case3 = resultNode.innerHTML.match(/(\(*\()(?!\()/g);
 
+      console.log(case0, case1, case2, case3);
       temp = resultNode.innerHTML;
-
 
       if (!isBalanced(resultNode.innerHTML)) return;
 
@@ -225,18 +223,18 @@ const buttonClicked = (event) => {
     } else if (op === 'n!') {
 
       let result = 1;
-      temp = parseInt(currData);
+      temp = parseInt(resultNode.innerHTML);
 
       for ( ; temp > 0; temp--) {
         result *= temp;
       }
 
-      if (currData != 0)
+      if (resultNode.innerHTML != 0)
         resultNode.innerHTML = result;
 
     } else if (op === '|x|') {
 
-      resultNode.innerHTML = Math.abs(currData);
+      resultNode.innerHTML = Math.abs(resultNode.innerHTML);
 
     }
 
@@ -360,26 +358,48 @@ const Parser = function(initString) {
 
 
 
-  this.searchExponent = function (str) {
-    const EULER_NUMBER = 2.71828182846;
-    let obj = str.match(/e\^\d+\.\d+|e\^\d+/);
+  this.searchExponentParser = function (str, heads = [], pairs = [], idx = 0) {
 
-    if (obj)
-      str = str.slice(0, obj.index) +  EULER_NUMBER + '**' +'('+ str.slice(obj.index + 2) + ')';
+    if (! str.match(/^\(.+\)$/)) {
 
-    while (str.indexOf('e') !== -1) {
-      str = str.searchExponent.call(this, str);
+      while (idx < str.length) {
+        if (str.slice(idx).indexOf('e^(') === 0) {
+          heads.push(idx);
+          idx += 3;
+        } else if (str.slice(idx).indexOf('(') === 0)
+        heads.push(idx);
+
+        if (str.slice(idx).indexOf(')') === 0)
+        pairs.push([heads.pop(), idx]);
+
+        ++idx;
+      }
+
+      pairs.filter( element => str[element[0]] === 'e' ).forEach(pair => {
+        str = str.slice(0, pair[0]) + '(' +  str.slice(pair[0], pair[1] + 1) + str.slice(pair[1] + 1) +')';
+      });
+
     }
 
-    return this.searchMult.call(this, str);
+    return this.searchParenthesis.call(this, str);
 
+  };
+
+  this.searchExponent = function (str) {
+    const EULER_NUMBER = 2.71828182846;
+    const regresult = str.match(/(?<=e\^).*\)/);
+    if (regresult) {
+      str = this.searchMult.call(this, str.slice(regresult.index,  regresult.index + regresult[0].length));
+      str = String( EULER_NUMBER ** parseInt(str.match(/\d+|\d+\.\d+/)));
+    }
+    return this.searchMult.call(this, str);
   };
 
   this.searchMult = function (str) {
     let int_int = str.match(/-*\d+\*\d+/);
     let dec_int = str.match(/-*\d+\*\d+\.\d+/);
     let int_dec = str.match(/-*\d+\.\d+\*\d+/);
-    let dec_dec = str.match(/-*\d+\.\d+\*\d+\.\d/);
+    let dec_dec = str.match(/-*\d+\.\d+\*\d+\.\d+/);
     let regexObj, a ,b;
 
     if (int_int)
@@ -390,7 +410,6 @@ const Parser = function(initString) {
       regexObj = int_dec;
     if (dec_dec)
       regexObj = dec_dec;
-
 
     if (regexObj) {
       a = regexObj.index;
@@ -412,7 +431,7 @@ const Parser = function(initString) {
     let int_int = str.match(/-*\d+\÷\d+/);
     let dec_int = str.match(/-*\d+\÷\d+\.\d+/);
     let int_dec = str.match(/-*\d+\.\d+\÷\d+/);
-    let dec_dec = str.match(/-*\d+\.\d+\÷\d+\.\d/);
+    let dec_dec = str.match(/-*\d+\.\d+\÷\d+\.\d+/);
     let regexObj, a ,b;
 
     if (int_int)
@@ -431,6 +450,10 @@ const Parser = function(initString) {
       str = str.slice(0, a) + regexObj[0].split('÷').reduce((acc, curr) => parseFloat(acc) / parseFloat(curr)) + str.slice(b);
     }
 
+    while (str.indexOf('÷') !== -1) {
+      str = this.searchDiv.call(this, str);
+    }
+
     return this.searchAdd.call(this, str);
   };
 
@@ -438,7 +461,7 @@ const Parser = function(initString) {
     let int_int = str.match(/-*\d+\+\d+/);
     let dec_int = str.match(/-*\d+\+\d+\.\d+/);
     let int_dec = str.match(/-*\d+\.\d+\+\d+/);
-    let dec_dec = str.match(/-*\d+\.\d+\+\d+\.\d/);
+    let dec_dec = str.match(/-*\d+\.\d+\+\d+\.\d+/);
     let regexObj, a ,b;
 
     if (int_int)
@@ -457,6 +480,10 @@ const Parser = function(initString) {
       str = str.slice(0, a) + regexObj[0].split('+').reduce((acc, curr) => parseFloat(acc) + parseFloat(curr)) + str.slice(b);
     }
 
+    while (str.indexOf('+') !== -1) {
+      str = this.searchDiv.call(this, str);
+    }
+
     return this.searchSub.call(this, str);
   };
 
@@ -464,7 +491,7 @@ const Parser = function(initString) {
     let int_int = str.match(/\d+\-\d+/);
     let dec_int = str.match(/\d+\-\d+\.\d+/);
     let int_dec = str.match(/\d+\.\d+\-\d+/);
-    let dec_dec = str.match(/\d+\.\d+\-\d+\.\d/);
+    let dec_dec = str.match(/\d+\.\d+\-\d+\.\d+/);
     let regexObj, a ,b;
 
     if (int_int)
@@ -482,11 +509,16 @@ const Parser = function(initString) {
       str = str.slice(0, a) + regexObj[0].split('-').reduce((acc, curr) => parseFloat(acc) - parseFloat(curr)) + str.slice(b);
     }
 
+    while (str.indexOf('-') !== -1) {
+      str = this.searchDiv.call(this, str);
+    }
+
     return str;
+
   };
 
   this.run = (str = this.str) => {
-    return this.searchParenthesis.call(this, str);
+    return this.searchExponentParser.call(this, str);
   }
 
 };
