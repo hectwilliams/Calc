@@ -90,17 +90,21 @@ const View = ({blocksCount}) => {
         </span>
 
         <span className = {ViewCss.output}>
-          <span>{0}</span>
+          <input type = "text" onChange = {debounce} defaultValue = {0}  data-timer = {0}></input>
         </span>
 
       </div>
 
       <div className = {ViewCss.itemBar_}> </div>         {/* Black BAR */}
 
+      {/* <div className = {ViewCss.box}>  </div> */}
+
     </div>
   )
 }
 export default View;
+
+
 
 const buttonClicked = (event) => {
   let eventNode =  event.currentTarget;
@@ -112,64 +116,61 @@ const buttonClicked = (event) => {
   let binaryOps = ['*', '+', '-', '%', '÷','y√x', 'e^x'];
   let UnaryOps = ['√', 'x^3', 'x^2', '1/x', '+/-', 'n!', '|x|', '2√', '3√', '2^x'];
   let booleanArray = [binaryOps.includes(op), UnaryOps.includes(op)];
-  let balanced = isBalanced(resultNode.innerHTML);
+  let balanced = isBalanced(resultNode.value);
   let temp;
 
-  if (resultNode.innerHTML === 'NaN') {
-    resultNode.innerHTML = 0;
+  if (resultNode.value === 'NaN') {
+    resultNode.value = 0;
   }
 
 /* BINARY OPERATIONS */
-  if (booleanArray[0] && resultNode.innerHTML.match(/[0-9\)]$/)) {
+  if (booleanArray[0] && resultNode.value.match(/[0-9\)]$/)) {
 
     if (op === '*') {
 
-      resultNode.innerHTML += '*';
+      resultNode.value += '*';
 
     } else if (op === '+') {
 
-      resultNode.innerHTML += '+';
+      resultNode.value += '+';
 
     } else if (op === '-') {
 
-      resultNode.innerHTML += '-';
+      resultNode.value += '-';
 
     } else if (op === '÷') {
 
-      resultNode.innerHTML += '÷';
+      resultNode.value += '÷';
 
     } else if (op === '%') {
 
-      resultNode.innerHTML += '÷';
+      resultNode.value += '÷';
 
     } else if (op === 'y√x') {
-      let y = parseInt(prompt("Enter y value", 2));
-      let x = parseFloat(resultNode.innerHTML);
 
-      if (!Number.isFinite(y) || !x )
-        return;
+      let func = (x, y) => {
+        return parseInt(x) ** (1/parseInt(y));
+      }
 
-      console.log(x ** (1/y));  // TODO - replace prompt with modal
+      insertionProcess(resultNode.value, func, resultNode );
 
     } else if (op === 'e^x') {
-      let case0 = resultNode.innerHTML.match(/^\(\d+\)$|^\(\d+\.\d+\)$/);
-      let case1 = resultNode.innerHTML.match(/\(\d+\.\d+|\(\d+(?=\)$)/);
-      let case2 = resultNode.innerHTML.match(/\d+$|\d+\.\d+$/);
-      let case3 = resultNode.innerHTML.match(/(\(*\()(?!\()/g);
+      let case0 = resultNode.value.match(/^\(\d+\)$|^\(\d+\.\d+\)$/);
+      let case1 = resultNode.value.match(/\(\d+\.\d+|\(\d+(?=\)$)/);
+      let case2 = resultNode.value.match(/\d+$|\d+\.\d+$/);
+      let case3 = resultNode.value.match(/(\(*\()(?!\()/g);
+      temp = resultNode.value;
 
-      console.log(case0, case1, case2, case3);
-      temp = resultNode.innerHTML;
-
-      if (!isBalanced(resultNode.innerHTML)) return;
+      if (!isBalanced(resultNode.value)) return;
 
       if (case0)
-        resultNode.innerHTML = resultNode.innerHTML.slice(0,case0.index) +  'e^(' + case0[0].slice(1);
+        resultNode.value = resultNode.value.slice(0,case0.index) +  'e^(' + case0[0].slice(1);
 
       else if (case1)
-        resultNode.innerHTML = resultNode.innerHTML.slice(0,case1.index) +  'e^(' + case1[0].slice(1) + ')';
+        resultNode.value = resultNode.value.slice(0,case1.index) +  'e^(' + case1[0].slice(1) + ')';
 
       else if (case2)
-        resultNode.innerHTML = resultNode.innerHTML.slice(0, case2.index) +  'e^(' + case2[0].slice(0) + ')';
+        resultNode.value = resultNode.value.slice(0, case2.index) +  'e^(' + case2[0].slice(0) + ')';
 
       else if (case3) {
         let obj = case3.reduce((result, token, i) => {
@@ -177,64 +178,64 @@ const buttonClicked = (event) => {
           result.index += searchedIndex;
           result.string = ' ' + result.string.slice(searchedIndex + 1);
             return result;
-          }, {index: 0, string: resultNode.innerHTML, len: resultNode.innerHTML.length});
+          }, {index: 0, string: resultNode.value, len: resultNode.value.length});
 
-        resultNode.innerHTML = resultNode.innerHTML.slice(0, obj.index) +  'e^' + resultNode.innerHTML.slice(obj.index) ;
+        resultNode.value = resultNode.value.slice(0, obj.index) +  'e^' + resultNode.value.slice(obj.index) ;
       }
 
-      if (resultNode.innerHTML.indexOf('e^e^') !== -1)
-        resultNode.innerHTML = temp;
+      if (resultNode.value.indexOf('e^e^') !== -1)
+        resultNode.value = temp;
 
     }
 
   }
 
 /* UNARY OPERATIONS */
-  if ( booleanArray[1] && !booleanArray[0] && resultNode.innerHTML.match(/^\d(?![÷+\-*])/) ) {
+  if ( booleanArray[1] && !booleanArray[0] && resultNode.value.match(/^\d(?![÷+\-*])/) ) {
 
     if (op === '2^x') {
 
-      resultNode.innerHTML = 2**parseFloat(resultNode.innerHTML);
+      resultNode.value = 2**parseFloat(resultNode.value);
 
     } else if (op === '2√') {
 
-      resultNode.innerHTML = parseFloat(resultNode.innerHTML)**(1/2) ;
+      resultNode.value = parseFloat(resultNode.value)**(1/2) ;
 
     } else if (op === '3√') {
 
-      resultNode.innerHTML = parseFloat(resultNode.innerHTML)**(1/3) ;
+      resultNode.value = parseFloat(resultNode.value)**(1/3) ;
 
     } else if (op === 'x^3') {
 
-      resultNode.innerHTML = parseFloat(resultNode.innerHTML)**3;
+      resultNode.value = parseFloat(resultNode.value)**3;
 
     } else if (op == 'x^2') {
 
-      resultNode.innerHTML = parseFloat(resultNode.innerHTML)**2;
+      resultNode.value = parseFloat(resultNode.value)**2;
 
     } else if (op === '1/x') {
 
-      resultNode.innerHTML = 1 / parseFloat(resultNode.innerHTML);
+      resultNode.value = 1 / parseFloat(resultNode.value);
 
     } else if (op === '+/-') {  // toggle[+,-] integer value
 
-      resultNode.innerHTML = parseFloat(resultNode.innerHTML) * -1;
+      resultNode.value = parseFloat(resultNode.value) * -1;
 
     } else if (op === 'n!') {
 
       let result = 1;
-      temp = parseInt(resultNode.innerHTML);
+      temp = parseInt(resultNode.value);
 
       for ( ; temp > 0; temp--) {
         result *= temp;
       }
 
-      if (resultNode.innerHTML != 0)
-        resultNode.innerHTML = result;
+      if (resultNode.value != 0)
+        resultNode.value = result;
 
     } else if (op === '|x|') {
 
-      resultNode.innerHTML = Math.abs(resultNode.innerHTML);
+      resultNode.value = Math.abs(resultNode.value);
 
     }
 
@@ -246,71 +247,74 @@ const buttonClicked = (event) => {
     if ((constants[op] || op.match(/[0-9]/))  ) {
       temp = (constants[op]) || parseFloat(op);
 
-      if (resultNode.innerHTML.match(/^0$/))
-        resultNode.innerHTML = temp;
+      if (resultNode.value.match(/^0$/))
+        resultNode.value = temp;
 
-      else if (resultNode.innerHTML.match(/[0-9]$/) && constants[op])
-      resultNode.innerHTML = resultNode.innerHTML;
+      else if (resultNode.value.match(/[0-9]$/) && constants[op])
+      resultNode.value = resultNode.value;
 
-      else if ( resultNode.innerHTML.slice(-1).match(/[0-9*+-÷\()]/g))
-        resultNode.innerHTML += temp;
+      else if ( resultNode.value.slice(-1).match(/[0-9*+-÷\()]/g))
+        resultNode.value += temp;
 
     } else if (op === ')') { // CLOSE PARENTHESIS
 
-      if (resultNode.innerHTML.match(/(?<=\(\d+)\d+\.\d|\)|\d$/) && !balanced  && !resultNode.innerHTML.match(/[\(*+\-÷]$/) ) {
+      if (resultNode.value.match(/(?<=\(\d+)\d+\.\d|\)|\d$/) && !balanced  && !resultNode.value.match(/[\(*+\-÷]$/) ) {
 
         if (eventNode.previousSibling.dataset.count != 0)
           eventNode.previousSibling.dataset.count = parseInt(eventNode.previousSibling.dataset.count) - 1;
 
-        resultNode.innerHTML += ')';
+        resultNode.value += ')';
 
       }
 
     } else if (op === '(') { // OPEN PARENTHESIS
 
-      temp = resultNode.innerHTML ;
+      temp = resultNode.value ;
 
-      if (resultNode.innerHTML.match(/^0$/g))
-        resultNode.innerHTML = '(';
+      if (resultNode.value.match(/^0$/g))
+        resultNode.value = '(';
 
-      else if (resultNode.innerHTML.match(/.+[\(*+\-÷]$|\($/g))
-        resultNode.innerHTML += '(';
+      else if (resultNode.value.match(/.+[\(*+\-÷]$|\($/g))
+        resultNode.value += '(';
 
-      if (temp !=resultNode.innerHTML )
+      if (temp !=resultNode.value )
       document.querySelector("button[data-count]").dataset.count = parseInt(document.querySelector("button[data-count]").dataset.count) + 1;
 
       return;
 
     } else if (op === '.' ) {   // DECIMAL
 
-      if (resultNode.innerHTML.match(/(?<!\.[0-9]*)\d$/))
-        resultNode.innerHTML += '.';
+      if (resultNode.value.match(/(?<!\.[0-9]*)\d$/))
+        resultNode.value += '.';
 
     }
 
   }
 
   if (op === '=') {  // EQUAL
-    if (isBalanced(resultNode.innerHTML))
-    resultNode.innerHTML = Parser(resultNode.innerHTML).run() || resultNode.innerHTML;
+    if (isBalanced(resultNode.value))
+      resultNode.value = Parser(resultNode.value).run() || resultNode.value;
+
   }
 
   /* CLEAR */
   if  (op === 'C') {
-
-    resultNode.innerHTML = 0;
+    resultNode.value = 0;
     document.querySelector("button[data-count]").dataset.count = 0 ;
-
+    document.getElementsByClassName(ViewCss.output)[0].firstChild.value = 0;
+    document.getElementsByClassName(ViewCss.output)[0].firstChild.style.backgroundColor = 'white';
   }
 
   /* DELETE */
   if (op === 'del') {
 
-    resultNode.innerHTML = (resultNode.innerHTML.length === 1) ? 0 : resultNode.innerHTML.slice(0, resultNode.innerHTML.length - 1);
+    resultNode.value = (resultNode.value.length === 1) ? 0 : resultNode.value.slice(0, resultNode.value.length - 1);
 
-    document.querySelector("button[data-count]").dataset.count = isBalanced(resultNode.innerHTML)  ? 0 : resultNode.innerHTML.match(/[(]/g).length;
+    document.querySelector("button[data-count]").dataset.count = isBalanced(resultNode.value)  ? 0 : resultNode.value.match(/[(]/g).length;
 
   }
+
+
 
 };
 
@@ -545,3 +549,35 @@ const isBalanced = (str)=>   {
   return openBraces.length === 0;
 };
 
+
+const insertionProcess = (currData, operation, element) => {
+  new Promise((resolve, reject) => {
+    let timerID = null;
+    element.value = "";
+    element.style.backgroundColor = "silver";
+    element.placeholder = "Y value (click enter when complete)";
+    element.focus();
+
+    resolve(element.addEventListener('change', () => {
+      clearTimeout(timerID);
+
+      timerID = setTimeout( () => {
+        element.placeholder  = "";
+        element.style.backgroundColor = "white";
+        element.value = operation(currData, element.value);
+      }, 100);
+    }));
+
+  })
+};
+
+var timerID = null;
+const debounce = function(event) {
+    if (!timerID || !!timerID) {
+      clearInterval(timerID);
+      timerID = setTimeout(() => {
+        timerID = null;
+       return true;
+      },  1000);
+    }
+};
