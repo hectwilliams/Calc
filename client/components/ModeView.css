@@ -5,6 +5,7 @@
   grid-template-rows: 500px;
   grid-template-areas:
   "a b c";
+  z-index: 1;
 }
 .itemBar_ {
   grid-area: a, c;
@@ -50,7 +51,7 @@
   font-size: xx-large;
 }
 
-.blocks {             /* child of .itemView_ */
+.blocks { /* child of .itemView_ */
   grid-column:  1;
   display: grid;
   grid-template-columns: repeat(8, 55px [cVar]);
@@ -73,27 +74,3 @@
 }
 
 
-
-
-
-
-/*
-.selectMode {
-  display: block;
-} */
-
-/*
-.itemView_[data-count = "19"] {
-  /* display: block;
-  /* background-color: purple;
-}
-
-.itemView_[data-count = "49"] {
-  display: block;
-  background-color: purple;
-}
-
-.itemView_[data-count = "39"] {
-  display: block;
-  background-color: purple;
-}*/
