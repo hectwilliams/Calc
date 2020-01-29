@@ -51,21 +51,7 @@ export default class App extends React.Component {
 
           <span className = {AppCss.options}>
 
-            <button onClick = {this.optionClick} >
-              <label> Mode </label>
-              {
-                (this.state.optionText) ?
-                  <div className  = {ModeView.selectMode}>
-                    <div>  </div>
-                    <div>  </div>
-                    <div>  </div>
-                  </div>
-                : ''
-              }
-             </button>
-
-
-            <button onClick = {this.optionClick} > Conversion</button>
+          <button onClick = {this.optionClick} > Conversions </button>
 
           </span>
 

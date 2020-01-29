@@ -50,61 +50,57 @@ const View = ({blocksCount}) => {
           <button onClick = {buttonClicked} value = {'π'} className = {ViewCss.item}> {'π'} </button>
           <button data-count = {0} onClick = {buttonClicked} value = {'('} className = {ViewCss.item}> {'('} </button>
           <button onClick = {buttonClicked} value = {')'} className = {ViewCss.item}> {')'} </button>
-          <button onClick = {buttonClicked} value = {'÷'} className = {ViewCss.item}> {'÷'} </button>
+          <button id = {"divide"}  onClick = {buttonClicked} value = {'÷'} className = {ViewCss.item}> {'÷'} </button>
 
           <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} value = {'x^3'} className = {ViewCss.item}> {'x^3'} </button>
           <button onClick = {buttonClicked} value = {'1/x'} className = {ViewCss.item}> {'1/x'} </button>
-          <button onClick = {buttonClicked} value = {9} className = {ViewCss.item}> {'9'} </button>
-          <button onClick = {buttonClicked} value = {8} className = {ViewCss.item}> {'8'} </button>
-          <button onClick = {buttonClicked} value = {7} className = {ViewCss.item}> {'7'} </button>
-          <button onClick = {buttonClicked} value = {"*"}className = {ViewCss.item}> {'x'} </button>
+          <button id = {"nine"}  onClick = {buttonClicked} value = {9} className = {ViewCss.item}> {'9'} </button>
+          <button id = {"eight"}  onClick = {buttonClicked} value = {8} className = {ViewCss.item}> {'8'} </button>
+          <button id = {"seven"}  onClick = {buttonClicked} value = {7} className = {ViewCss.item}> {'7'} </button>
+          <button id = {"multiply"} onClick = {buttonClicked} value = {"*"}className = {ViewCss.item}> {'x'} </button>
 
           <button className = {ViewCss.item}> </button>
           <button className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} value = {'|x|'} className = {ViewCss.item}>  {'|x|'} </button>
           <button onClick = {buttonClicked} value = {'n!'} className = {ViewCss.item}>  {'n!'} </button>
-          <button onClick = {buttonClicked} value = {4} className = {ViewCss.item}> {'4'} </button>
-          <button onClick = {buttonClicked} value = {5} className = {ViewCss.item}> {'5'} </button>
-          <button onClick = {buttonClicked} value = {6} className = {ViewCss.item}> {'6'} </button>
-          <button onClick = {buttonClicked} value = {"-"}className = {ViewCss.item}> {'-'} </button>
+          <button id = {"four"} onClick = {buttonClicked} value = {4} className = {ViewCss.item}> {'4'} </button>
+          <button id = {"five"}  onClick = {buttonClicked} value = {5} className = {ViewCss.item}> {'5'} </button>
+          <button id = {"six"}  onClick = {buttonClicked} value = {6} className = {ViewCss.item}> {'6'} </button>
+          <button id = {"subtract"}  onClick = {buttonClicked} value = {"-"}className = {ViewCss.item}> {'-'} </button>
 
           <button className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} value = {'2^x'} className = {ViewCss.item}> {'2^x'} </button>
           <button onClick = {buttonClicked} value = {'3√'} className = {ViewCss.item}> {'3√'} </button>
           <button onClick = {buttonClicked} value = {'2√'} className = {ViewCss.item}> {'2√'} </button>
-          <button onClick = {buttonClicked} value = {1} className = {ViewCss.item}> {'1'} </button>
-          <button onClick = {buttonClicked} value = {2} className = {ViewCss.item}> {'2'} </button>
-          <button onClick = {buttonClicked} value = {3} className = {ViewCss.item}> {'3'} </button>
-          <button onClick = {buttonClicked} value = {"+"}className = {ViewCss.item}> {'+'} </button>
+          <button id = {"one"}  onClick = {buttonClicked} value = {1} className = {ViewCss.item}> {'1'} </button>
+          <button id = {"two"}  onClick = {buttonClicked} value = {2} className = {ViewCss.item}> {'2'} </button>
+          <button id = {"three"}  onClick = {buttonClicked} value = {3} className = {ViewCss.item}> {'3'} </button>
+          <button id = {"add"}  onClick = {buttonClicked} value = {"+"}className = {ViewCss.item}> {'+'} </button>
 
           <button className = {ViewCss.item}> </button>
           <button className = {ViewCss.item}> </button>
           <button className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked}  value = {'y√x'} className = {ViewCss.item}> {'y√x'} </button>
           <button onClick = {buttonClicked}  value = {"+/-"} className = {ViewCss.item}> {'+/-'} </button>
-          <button onClick = {buttonClicked}  value = {0} className = {ViewCss.item}> {'0'} </button>
+          <button id = {"zero"}  onClick = {buttonClicked}  value = {0} className = {ViewCss.item}> {'0'} </button>
           <button onClick = {buttonClicked}  value = {'.'} className = {ViewCss.item}> {'.'} </button>
-          <button data-buffer = {0} onClick = {buttonClicked}  value = {"="}className = {ViewCss.item}> {'='} </button>
+          <button id = {"equal"}  data-buffer = {''} data-callback = {""} onClick = {buttonClicked}  value = {"="}className = {ViewCss.item}> {'='} </button>
         </span>
 
         <span className = {ViewCss.output}>
-          <input type = "text" onChange = {debounce} defaultValue = {0}  data-timer = {0}></input>
+          <input onKeyDown = {keyDown} type = "text" onChange = {debounce} defaultValue = {0}   ></input>
         </span>
 
       </div>
 
       <div className = {ViewCss.itemBar_}> </div>         {/* Black BAR */}
 
-      {/* <div className = {ViewCss.box}>  </div> */}
-
     </div>
   )
 }
 export default View;
-
-
 
 const buttonClicked = (event) => {
   let eventNode =  event.currentTarget;
@@ -148,11 +144,15 @@ const buttonClicked = (event) => {
 
     } else if (op === 'y√x') {
 
-      let func = (x, y) => {
-        return parseInt(x) ** (1/parseInt(y));
-      }
+        document.querySelector("button[data-buffer]").dataset.buffer = resultNode.value;
+        document.querySelector("button[data-callback]").dataset.callback = (function rootXY(base, exponent, node) {
+          node.placeholder = "";
+          node.value  = base ** (1/exponent);
+        }).toString();
 
-      insertionProcess(resultNode.value, func, resultNode );
+        resultNode.value = '';
+        resultNode.style.backgroundColor = "silver";
+        resultNode.placeholder = "Y value (click enter when complete)";
 
     } else if (op === 'e^x') {
       let case0 = resultNode.value.match(/^\(\d+\)$|^\(\d+\.\d+\)$/);
@@ -314,6 +314,7 @@ const buttonClicked = (event) => {
 
   }
 
+  resultNode.focus();
 
 
 };
@@ -534,43 +535,37 @@ const Parser = function(initString) {
 
 const isBalanced = (str)=>   {
   let openBraces = [];
-  let map = {')': '('}
+  let map = {')': '('};
+  let ocount = 0, ecount = 0;
+
+  if (str.match(/\)\(/))
+    return null;
 
   for (let c of str) {
 
-    if (c === '(')
+    if (c === '('){
       openBraces.push(c);
+      ++ocount;
+    }
 
-    if (map[c] === openBraces[openBraces.length - 1] )
-      openBraces.pop();
+    if (c == ')') {
+      if (map[c] === openBraces[openBraces.length - 1] ) {  // sub tangent found
+        openBraces.pop();
+      } else {
+        ++ecount;  // = 0 for balanced string
+      }
+    }
 
   }
 
-  return openBraces.length === 0;
+  return (openBraces.length === 0)  && ecount == 0  ;
 };
 
 
-const insertionProcess = (currData, operation, element) => {
-  new Promise((resolve, reject) => {
-    let timerID = null;
-    element.value = "";
-    element.style.backgroundColor = "silver";
-    element.placeholder = "Y value (click enter when complete)";
-    element.focus();
-
-    resolve(element.addEventListener('change', () => {
-      clearTimeout(timerID);
-
-      timerID = setTimeout( () => {
-        element.placeholder  = "";
-        element.style.backgroundColor = "white";
-        element.value = operation(currData, element.value);
-      }, 100);
-    }));
-
-  })
-};
-
+/*
+  Function: debounce
+  Purpose: TBD
+*/
 var timerID = null;
 const debounce = function(event) {
     if (!timerID || !!timerID) {
@@ -580,4 +575,69 @@ const debounce = function(event) {
        return true;
       },  1000);
     }
+};
+
+/*
+  Function: keyDonw
+  Purpose: process input user numerical values when focused on input node
+*/
+const keyDown = (event) => {
+  let currNode = document.querySelector("button[data-buffer]");
+  let buffer = currNode.dataset.buffer;
+  let callback = currNode.dataset.callback;
+
+    switch (event.key) {
+      case '0':
+        delayColor(document.querySelector('#zero')); break;
+      case '1':
+        delayColor(document.querySelector('#one')); break;
+      case '2':
+        delayColor(document.querySelector('#two')); break;
+      case '3':
+        delayColor(document.querySelector('#three')); break;
+      case '4':
+        delayColor(document.querySelector('#four')); break;
+      case '5':
+        delayColor(document.querySelector('#five')); break;
+      case '6':
+        delayColor(document.querySelector('#six')); break;
+      case '7':
+        delayColor(document.querySelector('#seven')); break;
+      case '8':
+        delayColor(document.querySelector('#eight')); break;
+      case '9':
+        delayColor(document.querySelector('#nine')); break;
+      default:
+        // nothing
+   }
+
+
+  if (event.keyCode === 13 ) {
+    if (currNode.dataset.buffer !== '') {
+      if (callback.indexOf('function') !== -1) {
+        event.currentTarget.style.backgroundColor = 'white';
+        new Function ( `base`, `exponent`, `node`,  `return ${callback}(base, exponent, node)`) (buffer , event.currentTarget.value, event.currentTarget);
+        currNode.dataset.buffer = '';
+      }
+    } else if (isBalanced(event.currentTarget.value) ) {
+      event.currentTarget.value = Parser(event.currentTarget.value).run();
+    }
+  }
+
+};
+
+/*
+  Function: delayColor
+  Purpose: node background color changes color and returns in 300ms
+*/
+const delayColor = function (node) {
+  let delay = 150; // ms
+  new Promise( (resolve, reject) => {
+    setTimeout(() => { node.className = ViewCss.blocksUpdate; resolve(Promise.resolve)}, delay);
+  })
+  .then (() => {
+    return new Promise ((resolve, reject) => {
+      setTimeout(() => { node.className = ViewCss.item; resolve(Promise.resolve)}, delay);
+    });
+  })
 };
