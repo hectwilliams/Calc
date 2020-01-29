@@ -59,9 +59,29 @@
   margin: auto auto;
 }
 
-.blocks button {
+/* .blocks button {
   font-weight: bold;
   font-size: small;
+  background-color: blanchedalmond;
+  /* transition-property:  background-color;
+  transition-duration: 2s;
+  transition-timing-function: linear; */
+
+.item {
+  display: block;
+  background-color: blanchedalmond;
+  font-weight: bold;
+  font-size: small;
+  outline: none;
+
+}
+.blocksUpdate {
+  font-weight: bold;
+  font-size: small;
+  background-color: gray;
+  transition-property: background-color;
+  transition-duration: 0.1s;
+  transition-timing-function: linear;
 }
 
 [data-count]:nth-child(30) {
