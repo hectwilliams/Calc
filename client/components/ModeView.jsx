@@ -89,9 +89,12 @@ const View = ({blocksCount}) => {
           <button id = {"equal"}  data-buffer = {''} data-callback = {""} onClick = {buttonClicked}  value = {"="}className = {ViewCss.item}> {'='} </button>
         </span>
 
-        <span className = {ViewCss.output}>
-          <input onKeyDown = {keyDown} type = "text" onChange = {debounce} defaultValue = {0}   ></input>
-        </span>
+        <div className = {ViewCss.output}>
+          <input onKeyDown = {keyDown} type = "text" data-name = {"decimal"} onChange = {debounce} defaultValue = {0}   ></input>
+          <input  readOnly data-name  = {"binary"}></input>
+          <input readOnly  data-name  = {"hex"}></input>
+          <input  readOnly  data-name  = {"octal"}></input>
+        </div>
 
       </div>
 
@@ -561,6 +564,13 @@ const isBalanced = (str)=>   {
   return (openBraces.length === 0)  && ecount == 0  ;
 };
 
+/*
+  Function: Base
+  Purpose: calculate base 2, , and 16
+*/
+const Base = function (value) {
+  console.log(value);
+};
 
 /*
   Function: debounce
@@ -570,10 +580,10 @@ var timerID = null;
 const debounce = function(event) {
     if (!timerID || !!timerID) {
       clearInterval(timerID);
-      timerID = setTimeout(() => {
+      timerID = setTimeout((value) => {
         timerID = null;
-       return true;
-      },  1000);
+        Base(parseInt(value));
+      },  1000, event.currentTarget.value);
     }
 };
 

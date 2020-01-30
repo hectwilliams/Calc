@@ -22,33 +22,20 @@
 
 .output {             /* child of .itemView_ */
   grid-column: 2;
-  width: 100%;
+  width: 80%;
   margin: auto;
   text-align: right;
 
 }
 
-.output :nth-child(1){
-  display: inline-block;
+.output input:nth-of-type(n) {
   border-radius: 10px;
   border: groove 1px black;
-  width: 80%;
-  /* height: 40px; */
+  width: 100%;
   text-align: right;
   font-size: medium;
   vertical-align: bottom;
   padding-right: 5%;
-
-}
-
-.output :nth-child(2){
-  display: block;
-  border-radius: 10px;
-  border: groove 1px black;
-  width: 30%;
-  height: 40px;
-  text-align: right;
-  font-size: xx-large;
 }
 
 .blocks { /* child of .itemView_ */
