@@ -22,33 +22,24 @@
 
 .output {             /* child of .itemView_ */
   grid-column: 2;
-  width: 100%;
+  width: 80%;
   margin: auto;
   text-align: right;
 
 }
 
-.output :nth-child(1){
-  display: inline-block;
-  border-radius: 10px;
-  border: groove 1px black;
-  width: 80%;
-  /* height: 40px; */
-  text-align: right;
-  font-size: medium;
-  vertical-align: bottom;
-  padding-right: 5%;
 
-}
 
-.output :nth-child(2){
+
+.output > input {
   display: block;
   border-radius: 10px;
   border: groove 1px black;
-  width: 30%;
-  height: 40px;
+  width: 100%;
   text-align: right;
-  font-size: xx-large;
+  font-size: medium;
+  padding-right: 5%;
+  outline: none;
 }
 
 .blocks { /* child of .itemView_ */
@@ -58,14 +49,6 @@
   grid-template-rows: repeat(8, 55px [rVar]);
   margin: auto auto;
 }
-
-/* .blocks button {
-  font-weight: bold;
-  font-size: small;
-  background-color: blanchedalmond;
-  /* transition-property:  background-color;
-  transition-duration: 2s;
-  transition-timing-function: linear; */
 
 .item {
   display: block;
@@ -83,14 +66,4 @@
   transition-duration: 0.1s;
   transition-timing-function: linear;
 }
-
-[data-count]:nth-child(30) {
-  opacity: 0.5;
-}
-
-
-[data-count= "0"]:nth-child(30) {
-    opacity: 1;
-}
-
 
