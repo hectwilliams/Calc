@@ -91,9 +91,17 @@ const View = ({blocksCount}) => {
 
         <div className = {ViewCss.output}>
           <input onKeyDown = {keyDown} type = "text" data-name = {"decimal"} onChange = {debounce} defaultValue = {0}   ></input>
-          <input  readOnly data-name  = {"binary"}></input>
-          <input readOnly  data-name  = {"hex"}></input>
-          <input  readOnly  data-name  = {"octal"}></input>
+          <input  readOnly data-name  = {"binary"} defaultValue = {'0'.repeat(16)}  ></input>
+          <input readOnly  data-name  = {"hex"} defaultValue = {' '+  '0'.repeat(4)} ></input>
+          <input readOnly  data-name  = {"octal"} defaultValue = {' '+  '0'.repeat(4)} ></input>
+
+          <div >
+            <span data-color = "red" ></span>
+            <span data-color = "blue" ></span>
+            <span data-color = "gray" ></span>
+            <span data-color = "yellow" ></span>
+          </div>
+
         </div>
 
       </div>
@@ -297,7 +305,7 @@ const buttonClicked = (event) => {
   if (op === '=') {  // EQUAL
     if (isBalanced(resultNode.value))
       resultNode.value = Parser(resultNode.value).run() || resultNode.value;
-
+      Base(resultNode);
   }
 
   /* CLEAR */
@@ -318,8 +326,6 @@ const buttonClicked = (event) => {
   }
 
   resultNode.focus();
-
-
 };
 
 /*
@@ -564,12 +570,69 @@ const isBalanced = (str)=>   {
   return (openBraces.length === 0)  && ecount == 0  ;
 };
 
+
+/*
+
+*/
+
 /*
   Function: Base
   Purpose: calculate base 2, , and 16
 */
-const Base = function (value) {
-  console.log(value);
+const Base = function (node) {
+  let value = parseInt(node.value);
+  let binaryNode = node.nextSibling;
+  let hexNode = binaryNode.nextSibling;
+  let octalNode = hexNode.nextSibling;
+
+  {
+    let temp = value ;
+    let reader = '';
+
+    binaryNode.value  = '0'.repeat(16);
+
+    while (temp > 0) {
+      reader = (temp % 2) + reader ;
+      temp = parseInt(temp / 2);
+    }
+
+    if (reader != 0 )
+      binaryNode.value = binaryNode.value.slice(0, binaryNode.value.length - reader.length) + reader + '';
+    else
+      binaryNode.value = '0'.repeat(16);
+
+  }
+
+
+  {
+    let temp = value ;
+    let reader = '';
+    while (temp > 0) {
+      reader = temp % 8 + reader;
+      temp = parseInt(temp /8);
+    }
+    if (reader != '')
+      octalNode.value = reader;
+    else
+      octalNode.value = '0'.repeat(4);
+  }
+
+  {
+    let temp = value ;
+    let reader = '';
+
+    while (temp > 0) {
+      reader = temp % 16 + reader;
+      temp = parseInt(temp /16);
+    }
+
+    if (reader != '')
+      hexNode.value = '0x' + reader;
+    else
+      hexNode.value = ('0').repeat(4);
+  }
+
+
 };
 
 /*
@@ -580,10 +643,9 @@ var timerID = null;
 const debounce = function(event) {
     if (!timerID || !!timerID) {
       clearInterval(timerID);
-      timerID = setTimeout((value) => {
+      timerID = setTimeout((node) => {
         timerID = null;
-        Base(parseInt(value));
-      },  1000, event.currentTarget.value);
+      },  1000,  event.currentTarget);
     }
 };
 
@@ -632,6 +694,8 @@ const keyDown = (event) => {
     } else if (isBalanced(event.currentTarget.value) ) {
       event.currentTarget.value = Parser(event.currentTarget.value).run();
     }
+
+    Base(event.currentTarget);
   }
 
 };
