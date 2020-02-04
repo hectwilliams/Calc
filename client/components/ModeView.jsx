@@ -92,8 +92,8 @@ const View = ({blocksCount}) => {
         <div className = {ViewCss.output}>
           <input onKeyDown = {keyDown} type = "text" data-name = {"decimal"} onChange = {debounce} defaultValue = {0}   ></input>
           <input  readOnly data-name  = {"binary"} defaultValue = {'0'.repeat(16)}  ></input>
-          <input readOnly  data-name  = {"hex"} defaultValue = {' '+  '0'.repeat(4)} ></input>
-          <input readOnly  data-name  = {"octal"} defaultValue = {' '+  '0'.repeat(4)} ></input>
+          <input readOnly  data-name  = {"hex"} defaultValue = {'0x'+  '0'.repeat(4)} ></input>
+          <input readOnly  data-name  = {"octal"} defaultValue = {' '+  '0'.repeat(3)} ></input>
 
           <div >
             <span data-color = "red" ></span>
@@ -333,11 +333,13 @@ const buttonClicked = (event) => {
   Purpose: reduce operation, removing parenthesis if possible
 */
 const Parser = function(initString) {
+  let removeSpaceRegex;
 
   if (!(this instanceof(Parser)))
     return new Parser(initString);
 
-  this.str = initString;
+    initString = initString.replace(/\s/g, '');
+    this.str = initString;
 
   this.searchParenthesis = function (str) {
     let open = [];

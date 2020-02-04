@@ -28,8 +28,9 @@
 
 }
 
-
-
+.output input:nth-child(2) { background-color: lightgray;}
+.output input:nth-child(3) { background-color: lightgray;}
+.output input:nth-child(4) { background-color: lightgray;}
 
 .output > input {
   display: block;
