@@ -1,0 +1,60 @@
+.modalContent {
+  display: block;
+  position: relative;
+  margin: 50px auto;
+  width: 50%;
+  height: 5%;
+  background-color: white;
+  border: groove 2px silver;
+  border-radius: 5px;
+  z-index: 3;
+
+}
+.modalContent::placeholder {
+  font-size: smaller;
+}
+
+
+.modalContent form {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+  gap: 10px 10px;
+  margin: 0.2em;
+
+}
+
+.modalContent input {
+  display: inline-block;
+  position: relative;
+  width: 25%;
+  height: 40%;
+  /* margin: 5em; */
+  border: groove 5px silver;
+  border-radius: 5px;
+
+}
+
+.modalContent span {
+  display: inline-block;
+  margin: 0 0;
+  border: ridge 4px crimson;
+  width: 25%;
+  height: 50%
+  /* gap: 1em; */
+}
+
+.modalContent span button {
+  display: inline-block;
+  margin: auto;
+  gap: 1em;
+}
+
+.searchMenu {
+  display: inline-block;
+  background-color: black;
+  width: 100%;
+  height: 50px;
+
+}

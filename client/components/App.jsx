@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import AppCss from './App.css';
 import ModeView from './ModeView';
+import ConversionsTable from './ConversionsTable';
 
 export default class App extends React.Component {
   constructor(props) {
@@ -13,7 +14,8 @@ export default class App extends React.Component {
         basic : 19,
         science: 49,
         programmer: 39
-      }
+      },
+      buttonNode: null
     };
     this.optionClick = this.optionClick.bind(this);
   }
@@ -28,15 +30,29 @@ export default class App extends React.Component {
     })
   }
 
+ // converison button clicked
   optionClick (event) {
-    this.setState({optionText: ''});
-    this.setState({optionText: event.currentTarget.innerText});
-  }
+    let modalNode = document.getElementsByClassName(AppCss.modal)[0];
+    let node = event.currentTarget;
 
+    if (modalNode.style.display !== 'block') {
+      modalNode.style.display = 'block';
+    }
+    node.style.opacity = 0.1;
+    this.setState({buttonNode: node});
+
+  }
 
   render() {
     return (
       <div>
+        {/* MODAL  */}
+        <div >
+          <ConversionsTable
+            modalClass = {AppCss.modal}
+            buttonNode = {this.state.buttonNode}
+          />
+        </div>
 
 {/* TOP LEFT BANNER  */}
         <div className = {AppCss.banner}>
