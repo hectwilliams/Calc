@@ -1,0 +1,86 @@
+.modalContent {
+  display: none;
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background-color: white;
+  border: groove 2px pink;
+  border-radius: 5px;
+  top: 25%;
+  left: 25%;
+}
+.modalContent::placeholder {
+  font-size: smaller;
+}
+
+.canvas {
+  display: grid;
+  grid-template-columns: [leftgap]30% [box]auto [del]5% [rightgap]25%;
+  grid-template-rows: [topgap]5% [msgType]5% [type]5% [minigap]5% [box1]25% [midgap]10% [box2]25% [endgap]20% ;
+  width: 100%;
+  height: 80%;
+}
+
+.typeLabel  {
+  color:red;
+  border: none;
+  grid-column: box;
+  grid-row: msgType;
+}
+.itemConvertBase {
+  grid-column: box;
+  grid-row: box1;
+  background-color: crimson;
+}
+
+.itemConvertCalculate {
+  grid-column: box;
+  grid-row: box2;
+  background-color: rgb(183, 170, 183);
+}
+
+.itemConvertTypeList {
+  border: groove 1px black;
+  grid-column: box;
+  grid-row: type;
+  font-size: smaller;
+  z-index: 5;;
+}
+
+.itemConvertCalculate form,
+.itemConvertBase form {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  justify-content: space-around;
+  gap: 10px 10px;
+  margin: 0.2em;
+}
+
+.itemConvertCalculate input,
+.itemConvertBase input {
+  display: inline-block;
+  position: relative;
+  width: 50%;
+  height: 25%;
+  border: groove 5px silver;
+  border-radius: 5px;
+}
+
+.deleteButton {
+  grid-column: del;
+  grid-row: type;
+  background-image: url('../assets/deleteIcon.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  width:fit-content;
+  border: groove 2px silver;
+  }
+
+.deleteButton:focus {
+  outline: none;
+}
+
+.deleteButton:active {
+  background-color: rgba(0, 0, 0, 0.6);
+}

@@ -24,6 +24,13 @@ module.exports = {
           { loader: 'style-loader'},
           { loader: 'css-loader', options: { modules: true } },
         ],
+      },
+
+      {
+        test: /.+(png|jpe?g|svg)$/,
+        use: [
+          { loader: 'file-loader'}
+        ],
       }
     ]
   },
