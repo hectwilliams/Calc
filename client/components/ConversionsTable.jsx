@@ -7,12 +7,18 @@ export default class ConversionsTable extends Component {
     this.modalBackgroundClick = this.modalBackgroundClick.bind(this);
     this.listChange = this.listChange.bind(this);
     this.clearInput = this.clearInput.bind(this);
+    this.valueUpdate = this.valueUpdate.bind(this);
     this.lengthList = ['ms'],
     this.areaList = ['m'],
     this.massList = [],
     this.state = {
       types : ['Length','Area', 'Mass'],
-      ops: []
+      ops: [],
+      conversionObj: {
+        a_val: null,
+        b_val: null,
+        a_unit: null
+      }
     }
   }
 
@@ -23,7 +29,7 @@ export default class ConversionsTable extends Component {
 
   listChange (event) {
     let value = event.currentTarget.value;
-
+    let nodeA, nodeB;
     switch (value) {
       case 'Length':
         this.setState({ops: this.lengthList}); break;
@@ -37,11 +43,16 @@ export default class ConversionsTable extends Component {
       event.currentTarget.style.backgroundColor = 'gray';
   }
 
+  valueUpdate (event) {
+    console.log(event.currentTarget.value)
+  }
+
   clearInput (event) {
     let node = event.currentTarget.nextSibling
     this.setState({ops: []});
     node.value = "";
     node.style.backgroundColor = 'white';
+    document.getElementsByClassName(css.itemConvertBase)[0].firstChild.nextSibling.firstChild.value = '';
 
   }
 
@@ -54,10 +65,10 @@ export default class ConversionsTable extends Component {
           <div className = {css.canvas}>
 
             <label className = {css.typeLabel}> choose a type </label>
-
             <button className = {css.deleteButton} onClick = {this.clearInput}> </button>
 
             <input list = {'measure-types'} name = {'conversion-type'} className = {css.itemConvertTypeList} onChange = {this.listChange} />
+
             <datalist id = {'measure-types'}>
                 {this.state.types.map( (element, index) => <option  key = {index} value = {element}  />) }
             </datalist>
@@ -66,12 +77,12 @@ export default class ConversionsTable extends Component {
               return <div key = {index} className = {css[obj.class]}>
                 <select  >
                   {this.state.ops.map( (element, index) => {
-                    return <option key = {index} value = {element}> {element} </option>
+                    return <option  key = {index} value = {element} > {element}   </option>
                   })}
                 </select>
 
                 <form>
-                  <input type = {"text"}></input>
+                  <input type = {"text"}  onChange = {this.valueUpdate} ></input>
                 </form>
               </div>
             })}

@@ -67,6 +67,11 @@
   border-radius: 5px;
 }
 
+.itemConvertCalculate input {
+  /* background-color: yellow; */
+  pointer-events: none;
+}
+
 .deleteButton {
   grid-column: del;
   grid-row: type;
@@ -82,5 +87,6 @@
 }
 
 .deleteButton:active {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: rgba(0, 0, 0, 1);
 }
+
