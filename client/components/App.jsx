@@ -37,9 +37,8 @@ export default class App extends React.Component {
 
     if (modalNode.style.display !== 'block') {
       modalNode.style.display = 'block';
+      document.querySelector("#modalContent").style.display = "block";
     }
-    node.style.opacity = 0.1;
-    this.setState({buttonNode: node});
 
   }
 
@@ -47,12 +46,11 @@ export default class App extends React.Component {
     return (
       <div>
         {/* MODAL  */}
-        <div >
+
           <ConversionsTable
             modalClass = {AppCss.modal}
-            buttonNode = {this.state.buttonNode}
           />
-        </div>
+
 
 {/* TOP LEFT BANNER  */}
         <div className = {AppCss.banner}>
