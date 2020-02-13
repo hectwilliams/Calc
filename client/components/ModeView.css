@@ -51,14 +51,21 @@
   margin: auto auto;
 }
 
+
 .item {
   display: block;
   background-color: blanchedalmond;
   font-weight: bold;
   font-size: small;
   outline: none;
-
 }
+.item[value = ''] {
+  opacity: 0.2;
+  /* background-color: red; */
+  display: block;
+}
+
+
 .blocksUpdate {
   font-weight: bold;
   font-size: small;
