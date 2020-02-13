@@ -8,11 +8,12 @@ export default class ConversionsTable extends Component {
     this.listChange = this.listChange.bind(this);
     this.clearInput = this.clearInput.bind(this);
     this.valueUpdate = this.valueUpdate.bind(this);
-    this.lengthList = ['ms'],
-    this.areaList = ['m'],
-    this.massList = [],
+
+    this.lengthList = ['m', 'mm', 'cm', 'km', 'um', 'nm', 'mile', 'yard', 'foot', 'inch', 'naut_mile'],
+    this.areaList = ['sq_m', 'sq_k', 'sq_y', 'sq_ft', 'sq_inch', 'hectare', 'acre'],
+    this.massList = ['gram', 'kgram', 'mgram', 'ugram', 'imperial_ton', 'metric_ton', 'us_ton', 'stone', 'pound', 'ounce'],
     this.state = {
-      types : ['Length','Area', 'Mass'],
+      types : ['length','area', 'mass'],
       ops: [],
       conversionObj: {
         a_val: null,
@@ -29,13 +30,12 @@ export default class ConversionsTable extends Component {
 
   listChange (event) {
     let value = event.currentTarget.value;
-    let nodeA, nodeB;
     switch (value) {
-      case 'Length':
+      case 'length':
         this.setState({ops: this.lengthList}); break;
-      case 'Area':
+      case 'area':
         this.setState({ops: this.areaList}); break;
-      case 'Mass':
+      case 'mass':
         this.setState({ops: this.massList}); break;
       default:
         this.setState({ops: []}); return;
@@ -43,8 +43,26 @@ export default class ConversionsTable extends Component {
       event.currentTarget.style.backgroundColor = 'gray';
   }
 
-  valueUpdate (event) {
-    console.log(event.currentTarget.value)
+  valueUpdate () {
+
+
+    let unitA = document.getElementsByClassName(css.itemConvertBase)[0].firstChild.value;
+    let unitB = document.getElementsByClassName(css.itemConvertCalculate)[0].firstChild.value;
+    let inputElement = document.getElementsByClassName(css.itemConvertCalculate)[0].childNodes[1].firstChild;
+    let value = document.getElementsByClassName(css.itemConvertBase)[0].childNodes[1].firstChild.value;
+    let mode = document.getElementsByClassName(css.itemConvertTypeList)[0];
+
+    const options =  {
+      method: 'POST',
+      mode: 'cors',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({measureType: mode.value , units: [unitA, unitB]})
+    };
+
+    fetch(new Request(`${window.location.origin}/measureUnits`,options))
+    .then(res => res.json())
+    .then(factors => { inputElement.value = (Math.pow((factors.a/ factors.b), - 1) * value).toFixed()})
+    .catch(err => console.log(err))
   }
 
   clearInput (event) {
@@ -53,7 +71,7 @@ export default class ConversionsTable extends Component {
     node.value = "";
     node.style.backgroundColor = 'white';
     document.getElementsByClassName(css.itemConvertBase)[0].firstChild.nextSibling.firstChild.value = '';
-
+    document.getElementsByClassName(css.itemConvertCalculate)[0].firstChild.nextSibling.firstChild.value = '';
   }
 
   render () {
@@ -75,9 +93,9 @@ export default class ConversionsTable extends Component {
 
             {[ {class:'itemConvertBase'}  , {class:'itemConvertCalculate' } ]. map (( obj, index) => {
               return <div key = {index} className = {css[obj.class]}>
-                <select  >
+                <select onChange = {this.valueUpdate}  >
                   {this.state.ops.map( (element, index) => {
-                    return <option  key = {index} value = {element} > {element}   </option>
+                    return <option  key = {index} value = {element} > {element} </option>
                   })}
                 </select>
 

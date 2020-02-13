@@ -16,44 +16,44 @@ const View = ({blocksCount}) => {
 
         {/* Buttons */}
         <span className = {ViewCss.blocks} >
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
 
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''} className = {ViewCss.item}> </button>
 
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} value = {'%'} className = {ViewCss.item}> {'%'} </button>
           <button onClick = {buttonClicked} value = {'e^x'} className = {ViewCss.item}> {'e^x'} </button>
           <button onClick = {buttonClicked} value = {'C'} className = {ViewCss.item}> {'C'} </button>
           <button onClick = {buttonClicked} value = {'del'} className = {ViewCss.item}> {'del'} </button>
 
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} value = {'x^2'} className = {ViewCss.item}> {'x^2'} </button>
           <button onClick = {buttonClicked} value = {'π'} className = {ViewCss.item}> {'π'} </button>
           <button data-count = {0} onClick = {buttonClicked} value = {'('} className = {ViewCss.item}> {'('} </button>
           <button onClick = {buttonClicked} value = {')'} className = {ViewCss.item}> {')'} </button>
           <button id = {"divide"}  onClick = {buttonClicked} value = {'÷'} className = {ViewCss.item}> {'÷'} </button>
 
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
-          <button onClick = {buttonClicked} className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
+          <button onClick = {buttonClicked} value = {''}  className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} value = {'x^3'} className = {ViewCss.item}> {'x^3'} </button>
           <button onClick = {buttonClicked} value = {'1/x'} className = {ViewCss.item}> {'1/x'} </button>
           <button id = {"nine"}  onClick = {buttonClicked} value = {9} className = {ViewCss.item}> {'9'} </button>
@@ -61,8 +61,8 @@ const View = ({blocksCount}) => {
           <button id = {"seven"}  onClick = {buttonClicked} value = {7} className = {ViewCss.item}> {'7'} </button>
           <button id = {"multiply"} onClick = {buttonClicked} value = {"*"}className = {ViewCss.item}> {'x'} </button>
 
-          <button className = {ViewCss.item}> </button>
-          <button className = {ViewCss.item}> </button>
+          <button value = {''}  className = {ViewCss.item}> </button>
+          <button value = {''}  className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} value = {'|x|'} className = {ViewCss.item}>  {'|x|'} </button>
           <button onClick = {buttonClicked} value = {'n!'} className = {ViewCss.item}>  {'n!'} </button>
           <button id = {"four"} onClick = {buttonClicked} value = {4} className = {ViewCss.item}> {'4'} </button>
@@ -70,7 +70,7 @@ const View = ({blocksCount}) => {
           <button id = {"six"}  onClick = {buttonClicked} value = {6} className = {ViewCss.item}> {'6'} </button>
           <button id = {"subtract"}  onClick = {buttonClicked} value = {"-"}className = {ViewCss.item}> {'-'} </button>
 
-          <button className = {ViewCss.item}> </button>
+          <button value = {''}   className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked} value = {'2^x'} className = {ViewCss.item}> {'2^x'} </button>
           <button onClick = {buttonClicked} value = {'3√'} className = {ViewCss.item}> {'3√'} </button>
           <button onClick = {buttonClicked} value = {'2√'} className = {ViewCss.item}> {'2√'} </button>
@@ -79,9 +79,9 @@ const View = ({blocksCount}) => {
           <button id = {"three"}  onClick = {buttonClicked} value = {3} className = {ViewCss.item}> {'3'} </button>
           <button id = {"add"}  onClick = {buttonClicked} value = {"+"}className = {ViewCss.item}> {'+'} </button>
 
-          <button className = {ViewCss.item}> </button>
-          <button className = {ViewCss.item}> </button>
-          <button className = {ViewCss.item}> </button>
+          <button value = {''}  className = {ViewCss.item}> </button>
+          <button value = {''}  className = {ViewCss.item}> </button>
+          <button value = {''}  className = {ViewCss.item}> </button>
           <button onClick = {buttonClicked}  value = {'y√x'} className = {ViewCss.item}> {'y√x'} </button>
           <button onClick = {buttonClicked}  value = {"+/-"} className = {ViewCss.item}> {'+/-'} </button>
           <button id = {"zero"}  onClick = {buttonClicked}  value = {0} className = {ViewCss.item}> {'0'} </button>

@@ -10,36 +10,18 @@ export default class App extends React.Component {
     this.state = {
       optionText: "",
       opView: null,
-      blocks: {
-        basic : 19,
-        science: 49,
-        programmer: 39
-      },
       buttonNode: null
     };
     this.optionClick = this.optionClick.bind(this);
   }
 
-  componentDidMount() {
-    axios.get('/hello')
-    .then((resp)=>{
-      console.log(resp);
-    })
-    .catch((err)=>{
-      console.log(err);
-    })
-  }
-
  // converison button clicked
   optionClick (event) {
     let modalNode = document.getElementsByClassName(AppCss.modal)[0];
-    let node = event.currentTarget;
-
     if (modalNode.style.display !== 'block') {
       modalNode.style.display = 'block';
       document.querySelector("#modalContent").style.display = "block";
     }
-
   }
 
   render() {
@@ -80,7 +62,7 @@ export default class App extends React.Component {
 
 {/* op Blocks */}
         {/* TODO ... ... .. . */}
-      <ModeView blocksCount = {this.state.blocks.basic} />
+      < ModeView />
 
       </div>
     )
