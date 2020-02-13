@@ -2,9 +2,9 @@
 
 ## Requirements
 
-⋅⋅* React
-⋅⋅* Postgres
-⋅⋅* Browser
+* React
+* Postgres
+* Browser
 
 1. Pull Repo (checkout master branch)
 2. Run node server
