@@ -588,6 +588,11 @@ const Base = function (node) {
   let binaryNode = node.nextSibling;
   let hexNode = binaryNode.nextSibling;
   let octalNode = hexNode.nextSibling;
+  const DigitToHex = function (num) {
+    if (num > 9)
+      return {'10': 'A', '11':'B', '12':'C', '13':'D', '14': 'E', '15': 'F'}[num]
+    else return num;
+  }
 
   {
     let temp = value ;
@@ -622,12 +627,12 @@ const Base = function (node) {
   }
 
   {
-    let temp = value ;
+    let temp0 = value ;
     let reader = '';
 
-    while (temp > 0) {
-      reader = temp % 16 + reader;
-      temp = parseInt(temp /16);
+    while (temp0 > 0) {
+      reader = DigitToHex(temp0 % 16)+ reader;
+      temp0 = parseInt(temp0 /16);
     }
 
     if (reader != '')
