@@ -314,6 +314,11 @@ const buttonClicked = (event) => {
     document.querySelector("button[data-count]").dataset.count = 0 ;
     document.getElementsByClassName(ViewCss.output)[0].firstChild.value = 0;
     document.getElementsByClassName(ViewCss.output)[0].firstChild.style.backgroundColor = 'white';
+    console.log(    );
+    document.getElementsByClassName(ViewCss.output)[0].childNodes.forEach((node, index) => {
+      node.value = node.defaultValue;
+    });
+
   }
 
   /* DELETE */
