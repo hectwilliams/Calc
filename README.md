@@ -6,6 +6,8 @@
 * Postgres
 * Browser
 
+### Shell Commands
+
 1. Pull Repo (checkout master branch)
 2. Run node server
 
