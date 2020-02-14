@@ -12,5 +12,6 @@
 2. Run node server
 
    * npm run server
+   * npm run react
 
 3. Enter the following URL in browser: http://localhost:3001/
