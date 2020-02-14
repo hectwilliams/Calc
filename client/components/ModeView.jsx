@@ -356,12 +356,14 @@ const Parser = function(initString) {
     });
 
     if (tangentList.length) {
-
-      if (tangentList[tangentList.length - 1].length === 2) {
-        let [a, b] = tangentList[tangentList.length - 1];
-        str = str.slice(0, a) + this.searchExponent.call(this, str.slice(a + 1, b)) + str.slice(b + 1);
+      if (tangentList[0].length === 2) {
+        let [a, b] = tangentList[0];
+        if (a+1 === b) {
+          str = str.slice(0, a) + this.searchExponent.call(this, str.slice(a + 1, a + 2)) + str.slice(b + 1);
+        } else {
+          str = str.slice(0, a) + this.searchExponent.call(this, str.slice(a + 1, b)) + str.slice(b + 1);
+        }
       }
-
     }
 
     while (str.indexOf('(') !== -1) {
