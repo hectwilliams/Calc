@@ -1,9 +1,7 @@
 # Calculator
 
 ## Requirements
-
-* React
-* Postgres
+* node
 * Browser
 
 ### Shell Commands
